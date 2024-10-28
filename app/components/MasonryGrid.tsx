@@ -2,7 +2,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import VideoItem from './VideoItem';
-import { SplatViewer } from '../viewer/SplatViewer';
+import {SplatViewer} from '../viewer/SplatViewer';
 import { useRouter } from 'next/navigation';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
