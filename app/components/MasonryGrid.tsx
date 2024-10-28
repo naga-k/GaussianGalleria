@@ -2,7 +2,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import VideoItem from './VideoItem';
-import Viewer from '../viewer/Viewer';
+import { SplatViewer } from '../viewer/SplatViewer';
 import { useRouter } from 'next/navigation';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -36,7 +36,6 @@ const MasonryGrid: React.FC = () => {
         console.error("Error fetching video items:", error);
       }
     };
-
     fetchVideoItems();
   }, []);
 
@@ -48,11 +47,9 @@ const MasonryGrid: React.FC = () => {
         secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
       },
     });
-
     // Extract bucket and key from the s3Url
     const [bucketName, ...keyParts] = s3Url.replace("s3://", "").split("/");
     const objectKey = keyParts.join("/");
-
     const command = new GetObjectCommand({ Bucket: bucketName, Key: objectKey });
     try {
       return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
@@ -65,10 +62,8 @@ const MasonryGrid: React.FC = () => {
   const handleVideoClick = async (item: VideoItem) => {
     try {
       const signedSplatSrc = await getSignedS3Url(item.splatSrc);
-      // Perform actions with the signed splatSrc, e.g., navigate to a video player
-      // console.log('Signed splatSrc:', signedSplatSrc);
-    setSelectedSplat(signedSplatSrc);
-    setIsModalOpen(true);
+      setSelectedSplat(signedSplatSrc);
+      setIsModalOpen(true);
     } catch (error) {
       console.error("Error signing splatSrc:", error);
     }
@@ -91,9 +86,8 @@ const MasonryGrid: React.FC = () => {
           />
         ))}
       </div>
-
       {isModalOpen && selectedSplat && (
-        <Viewer splatSrc={selectedSplat} onClose={closeModal} />
+        <SplatViewer splatUrl={selectedSplat} onClose={closeModal} />
       )}
     </div>
   );
