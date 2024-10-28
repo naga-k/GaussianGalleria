@@ -22,8 +22,12 @@ export async function GET() {
   try {
     // Fetch data from JSON file
     const filePath = path.join(process.cwd(), 'public', 'splatData.json');
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-    const jsonData: VideoItem[] = JSON.parse(fileContents);
+    let jsonData: VideoItem[] = [];
+
+    if (fs.existsSync(filePath)) {
+      const fileContents = fs.readFileSync(filePath, 'utf8');
+      jsonData = JSON.parse(fileContents);
+    }
 
     // Fetch data from database
     const dbData: DbItem[] = await db.select().from(splats);
