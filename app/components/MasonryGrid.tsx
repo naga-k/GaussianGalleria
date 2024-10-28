@@ -72,7 +72,7 @@ const MasonryGrid: React.FC = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedSplat(null);
-    router.push('/portfolio');
+    router.push('');
   };
 
   return (

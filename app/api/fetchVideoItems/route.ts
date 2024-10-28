@@ -9,6 +9,15 @@ interface VideoItem {
   splatSrc: string;
 }
 
+interface DbItem {
+  id: number;
+  name: string | null;
+  splat: string | null;
+  video: string | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+}
+
 export async function GET() {
   try {
     // Fetch data from JSON file
@@ -17,12 +26,12 @@ export async function GET() {
     const jsonData: VideoItem[] = JSON.parse(fileContents);
 
     // Fetch data from database
-    const dbData = await db.select().from(splats);
+    const dbData: DbItem[] = await db.select().from(splats);
 
     // Combine data
-    const combinedData: VideoItem[] = jsonData.concat(dbData.map((item: any) => ({
+    const combinedData: VideoItem[] = jsonData.concat(dbData.map((item: DbItem) => ({
       src: item.video || '',
-      splatSrc: item.splat
+      splatSrc: item.splat || ''
     })));
 
     return NextResponse.json(combinedData);
