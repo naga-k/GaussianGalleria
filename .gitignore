@@ -36,4 +36,4 @@ yarn-error.log*
 next-env.d.ts
 
 #video items
-public/videoItems.json
+public/splatData.json

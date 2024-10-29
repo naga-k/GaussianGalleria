@@ -1,10 +1,13 @@
+// app/components/VideoItem.tsx
 import React, { useRef } from 'react';
 
+export interface VideoItem {
+  src: string;
+  splatSrc: string;
+}
+
 interface VideoItemProps {
-  item: {
-    src: string;
-    splatSrc: string;
-  };
+  item: VideoItem;
   onClick: (splatSrc: string) => void;
 }
 
@@ -32,9 +35,6 @@ const VideoItem: React.FC<VideoItemProps> = ({ item, onClick }) => {
         onMouseEnter={() => handleVideoHover(true)}
         onMouseLeave={() => handleVideoHover(false)}
         onClick={() => onClick(item.splatSrc)}
-        loop
-        muted
-        playsInline
       />
     </div>
   );
