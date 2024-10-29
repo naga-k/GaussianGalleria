@@ -2,6 +2,8 @@
 
 A Next.js-based portfolio website for showcasing interactive 3D scenes using Splat visualization technology.
 
+Demo: [Hosted on Vercel](https://3-d-portfolio-tau-three.vercel.app)
+
 ## Overview
 
 This portfolio website features:
