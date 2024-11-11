@@ -2,7 +2,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import VideoItem from './VideoItem';
-import {SplatViewer} from '../viewer/SplatViewer';
 import { useRouter } from 'next/navigation';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -14,8 +13,6 @@ interface VideoItem {
 
 const MasonryGrid: React.FC = () => {
   const [videoItems, setVideoItems] = useState<VideoItem[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSplat, setSelectedSplat] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,7 +44,6 @@ const MasonryGrid: React.FC = () => {
         secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
       },
     });
-    // Extract bucket and key from the s3Url
     const [bucketName, ...keyParts] = s3Url.replace("s3://", "").split("/");
     const objectKey = keyParts.join("/");
     const command = new GetObjectCommand({ Bucket: bucketName, Key: objectKey });
@@ -55,24 +51,19 @@ const MasonryGrid: React.FC = () => {
       return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
     } catch (error) {
       console.error("Error generating presigned URL:", error);
-      return null; // Return null or handle the error as needed
+      return null;
     }
   };
 
   const handleVideoClick = async (item: VideoItem) => {
     try {
       const signedSplatSrc = await getSignedS3Url(item.splatSrc);
-      setSelectedSplat(signedSplatSrc);
-      setIsModalOpen(true);
+      if (signedSplatSrc) {
+        router.push(`/viewer?splatUrl=${encodeURIComponent(signedSplatSrc)}`);
+      }
     } catch (error) {
       console.error("Error signing splatSrc:", error);
     }
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedSplat(null);
-    router.push('');
   };
 
   return (
@@ -86,9 +77,6 @@ const MasonryGrid: React.FC = () => {
           />
         ))}
       </div>
-      {isModalOpen && selectedSplat && (
-        <SplatViewer splatUrl={selectedSplat} onClose={closeModal} />
-      )}
     </div>
   );
 };
