@@ -6,13 +6,15 @@ import { useRouter } from 'next/navigation';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-interface VideoItem {
-  src: string;
+interface SplatItem {
+  id: number;
+  name: string | null;
   splatSrc: string;
+  src: string;
 }
 
 const MasonryGrid: React.FC = () => {
-  const [videoItems, setVideoItems] = useState<VideoItem[]>([]);
+  const [videoItems, setVideoItems] = useState<SplatItem[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,8 +46,26 @@ const MasonryGrid: React.FC = () => {
         secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
       },
     });
-    const [bucketName, ...keyParts] = s3Url.replace("s3://", "").split("/");
-    const objectKey = keyParts.join("/");
+
+    let bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!;
+    let objectKey = '';
+
+    if (s3Url.startsWith('s3://')) {
+      // Handle s3://bucket/key
+      const bucketAndKey = s3Url.substring(5); // Remove 's3://'
+      const [bucket, ...keyParts] = bucketAndKey.split('/');
+      bucketName = bucket;
+      objectKey = keyParts.join('/');
+    } else if (s3Url.startsWith('https://')) {
+      // Handle full HTTPS URL
+      const url = new URL(s3Url);
+      bucketName = url.hostname.split('.')[0];
+      objectKey = url.pathname.substring(1); // Remove leading '/'
+    } else {
+      // Handle plain object key
+      objectKey = s3Url;
+    }
+
     const command = new GetObjectCommand({ Bucket: bucketName, Key: objectKey });
     try {
       return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
@@ -55,9 +75,10 @@ const MasonryGrid: React.FC = () => {
     }
   };
 
-  const handleVideoClick = async (item: VideoItem) => {
+  const handleVideoClick = async (item: SplatItem) => {
     try {
       const signedSplatSrc = await getSignedS3Url(item.splatSrc);
+      console.log("Splat url that is in the db", item.splatSrc);
       if (signedSplatSrc) {
         router.push(`/viewer?splatUrl=${encodeURIComponent(signedSplatSrc)}`);
       }
@@ -69,9 +90,9 @@ const MasonryGrid: React.FC = () => {
   return (
     <div className='relative'>
       <div className='columns-1 sm:columns-2 lg:columns-3 py-10 md:py-20 gap-4'>
-        {videoItems.map((item, index) => (
+        {videoItems.map((item) => (
           <VideoItem
-            key={index}
+            key={item.id}
             item={item}
             onClick={() => handleVideoClick(item)}
           />
