@@ -4,9 +4,9 @@
 import React, { useRef, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stats, PerspectiveCamera } from '@react-three/drei';
-import { CameraController } from './components/CameraController';
-import { ControlsUI } from './components/ControlsUI';
-import { SceneSetup } from './components/SceneSetup';
+import { CameraController } from './CameraController';
+import { ControlsUI } from './ControlsUI';
+import { SceneSetup } from './SceneSetup';
 
 
 interface SplatViewerProps {
@@ -32,7 +32,7 @@ export function SplatViewer({ splatUrl, onClose }: SplatViewerProps) {
       <ControlsUI onReset={handleReset} onClose={onClose} />
       
       <Canvas>
-        <Stats />
+        <Stats/>
         <PerspectiveCamera 
           makeDefault 
           position={[0, 0, 2]} 
@@ -40,6 +40,7 @@ export function SplatViewer({ splatUrl, onClose }: SplatViewerProps) {
           near={0.1}
           far={1000}
         />
+        
         <CameraController />
         <OrbitControls
           ref={controlsRef}
