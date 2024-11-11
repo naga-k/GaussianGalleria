@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { useSearchParams } from 'next/navigation';
-import { SplatViewer } from './components/SplatViewer';
+import SplatViewer  from './components/SplatViewer';
 
 const SplatViewerPage: React.FC = () => {
   const searchParams = useSearchParams();
