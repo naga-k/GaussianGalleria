@@ -1,23 +1,34 @@
-// app/pages/splatViewer.tsx
+// app/viewer/page.tsx
 'use client';
 
-import React from 'react';
-import { useSearchParams } from 'next/navigation';
-import SplatViewer  from './components/SplatViewer';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import SplatViewer from './components/SplatViewer';
 
-const SplatViewerPage: React.FC = () => {
+const Viewer: React.FC = () => {
   const searchParams = useSearchParams();
   const splatUrl = searchParams.get('splatUrl');
+  const [url, setUrl] = useState<string | null>(null);
+  const router = useRouter();
 
-  if (!splatUrl) {
-    return <div>Invalid Splat URL</div>;
-  }
+  useEffect(() => {
+    if (splatUrl) {
+      setUrl(splatUrl);
+      console.log('Splat URL:', splatUrl);
+    } else {
+      setUrl(null);
+    }
+  }, [splatUrl]);
 
   const handleClose = () => {
-    window.history.back();
+    router.push('/');
   };
 
-  return <SplatViewer splatUrl={splatUrl} onClose={handleClose} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+<SplatViewer splatUrl={url} onClose={handleClose} />
+    </Suspense>
+  );
 };
 
-export default SplatViewerPage;
+export default Viewer;
