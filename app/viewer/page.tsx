@@ -6,10 +6,19 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import SplatViewer from './components/SplatViewer';
 
 const Viewer: React.FC = () => {
+  const router = useRouter();
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ViewerContent router={router} />
+    </Suspense>
+  );
+};
+
+const ViewerContent: React.FC<{ router: ReturnType<typeof useRouter> }> = ({ router }) => {
   const searchParams = useSearchParams();
   const splatUrl = searchParams.get('splatUrl');
   const [url, setUrl] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     if (splatUrl) {
@@ -24,11 +33,7 @@ const Viewer: React.FC = () => {
     router.push('/');
   };
 
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-<SplatViewer splatUrl={url} onClose={handleClose} />
-    </Suspense>
-  );
+  return <SplatViewer splatUrl={url} onClose={handleClose} />;
 };
 
 export default Viewer;
