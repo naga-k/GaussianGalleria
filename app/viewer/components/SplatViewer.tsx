@@ -13,7 +13,7 @@ import * as THREE from 'three';
 import { ErrorBoundary } from 'react-error-boundary';
 
 interface SplatViewerProps {
-  splatUrl: string ;
+  splatUrl: string | null;
   onClose: () => void;
 }
 
