@@ -6,13 +6,15 @@ import { useRouter } from 'next/navigation';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-interface VideoItem {
-  src: string;
+interface SplatItem {
+  id: number;
+  name: string | null;
   splatSrc: string;
+  src: string;
 }
 
 const MasonryGrid: React.FC = () => {
-  const [videoItems, setVideoItems] = useState<VideoItem[]>([]);
+  const [videoItems, setVideoItems] = useState<SplatItem[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -73,7 +75,7 @@ const MasonryGrid: React.FC = () => {
     }
   };
 
-  const handleVideoClick = async (item: VideoItem) => {
+  const handleVideoClick = async (item: SplatItem) => {
     try {
       const signedSplatSrc = await getSignedS3Url(item.splatSrc);
       console.log("Splat url that is in the db", item.splatSrc);
@@ -88,9 +90,9 @@ const MasonryGrid: React.FC = () => {
   return (
     <div className='relative'>
       <div className='columns-1 sm:columns-2 lg:columns-3 py-10 md:py-20 gap-4'>
-        {videoItems.map((item, index) => (
+        {videoItems.map((item) => (
           <VideoItem
-            key={index}
+            key={item.id}
             item={item}
             onClick={() => handleVideoClick(item)}
           />
