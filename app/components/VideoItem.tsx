@@ -31,10 +31,13 @@ const VideoItem: React.FC<VideoItemProps> = ({ item, onClick }) => {
       <video
         ref={videoRef}
         src={item.src}
-        className='w-full object-cover rounded-lg cursor-pointer'
+        className='w-full h-auto object-cover rounded-lg cursor-pointer'
         onMouseEnter={() => handleVideoHover(true)}
         onMouseLeave={() => handleVideoHover(false)}
         onClick={() => onClick(item.splatSrc)}
+        playsInline
+        preload='metadata'
+        disablePictureInPicture
       />
     </div>
   );
