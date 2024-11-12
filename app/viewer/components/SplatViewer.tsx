@@ -8,7 +8,7 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { CameraController } from './CameraController';
 import { ControlsUI } from './ControlsUI';
 import { SceneSetup } from './SceneSetup';
-import { CameraInfo } from './CameraInfo';
+// import { CameraInfo } from './CameraInfo';
 import * as THREE from 'three'; 
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -76,7 +76,7 @@ export default function SplatViewer({ splatUrl, onClose }: SplatViewerProps) {
           />
           <SceneSetup splatUrl={splatUrl} />
           <primitive object={gridHelper} />
-          <CameraInfo />
+          {/* <CameraInfo /> */}
         </ErrorBoundary>
       </Canvas>
     </div>
