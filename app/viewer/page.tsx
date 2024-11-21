@@ -15,25 +15,24 @@ const Viewer: React.FC = () => {
   );
 };
 
-const ViewerContent: React.FC<{ router: ReturnType<typeof useRouter> }> = ({ router }) => {
+const ViewerContent = ({ router }) => {
   const searchParams = useSearchParams();
   const splatUrl = searchParams.get('splatUrl');
-  const [url, setUrl] = useState<string | null>(null);
+  const description = searchParams.get('description');
+  const name = searchParams.get('name');
 
   useEffect(() => {
-    if (splatUrl) {
-      setUrl(splatUrl);
-      console.log('Splat URL:', splatUrl);
-    } else {
-      setUrl(null);
-    }
-  }, [splatUrl]);
+    console.log("Params received:", { splatUrl, description, name }); // Debug log
+  }, [splatUrl, description, name]);
 
-  const handleClose = () => {
-    router.push('/');
-  };
-
-  return <SplatViewer splatUrl={url} onClose={handleClose} />;
+  return (
+    <SplatViewer 
+      splatUrl={splatUrl ? decodeURIComponent(splatUrl) : null}
+      description={description ? decodeURIComponent(description) : 'No description available'}
+      name={name ? decodeURIComponent(name) : 'Untitled'}
+      onClose={() => router.push('/')}
+    />
+  );
 };
 
 export default Viewer;

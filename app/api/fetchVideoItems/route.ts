@@ -4,9 +4,13 @@ import path from 'path';
 import { db } from '../../db/db';
 import { splats } from '../../db/schema';
 
+// app/api/fetchVideoItems/route.ts
 interface VideoItem {
+  id?: number;
   src: string;
   splatSrc: string;
+  name: string | null;
+  description: string | null;
 }
 
 interface DbItem {
@@ -14,13 +18,13 @@ interface DbItem {
   name: string | null;
   splat: string | null;
   video: string | null;
+  description: string | null;  // Add this to your schema if not present
   createdAt: Date | null;
   updatedAt: Date | null;
 }
 
 export async function GET() {
   try {
-    // Fetch data from JSON file
     const filePath = path.join(process.cwd(), 'public', 'splatData.json');
     let jsonData: VideoItem[] = [];
 
@@ -29,13 +33,14 @@ export async function GET() {
       jsonData = JSON.parse(fileContents);
     }
 
-    // Fetch data from database
     const dbData: DbItem[] = await db.select().from(splats);
 
-    // Combine data
     const combinedData: VideoItem[] = jsonData.concat(dbData.map((item: DbItem) => ({
+      id: item.id,
       src: item.video || '',
-      splatSrc: item.splat || ''
+      splatSrc: item.splat || '',
+      name: item.name || 'Untitled',
+      description: item.description || 'No description available'
     })));
 
     return NextResponse.json(combinedData);

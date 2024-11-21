@@ -7,5 +7,6 @@ export const splats=pgTable('splats',{
     splat:text('splat'),
     video:text('video'),
     createdAt:timestamp('createdAt').defaultNow(),
-    updatedAt:timestamp('updatedAt')
+    updatedAt:timestamp('updatedAt'),
+    description:text('description')
 });

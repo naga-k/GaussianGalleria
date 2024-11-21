@@ -11,14 +11,17 @@ interface SplatItem {
   name: string | null;
   splatSrc: string;
   src: string;
+  description: string;
 }
 
-const MasonryGrid: React.FC = () => {
+export default function MasonryGrid() {
   const [videoItems, setVideoItems] = useState<SplatItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const fetchVideoItems = async () => {
+      setLoading(true);
       try {
         const response = await fetch('/api/fetchVideoItems');
         const data = await response.json();
@@ -26,6 +29,7 @@ const MasonryGrid: React.FC = () => {
           const itemsWithSignedUrls = await Promise.all(data.map(async (item) => ({
             ...item,
             src: await getSignedS3Url(item.src),
+            splatSrc: await getSignedS3Url(item.splatSrc) // Pre-sign splat URLs
           })));
           setVideoItems(itemsWithSignedUrls);
         } else {
@@ -33,12 +37,16 @@ const MasonryGrid: React.FC = () => {
         }
       } catch (error) {
         console.error("Error fetching video items:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchVideoItems();
   }, []);
 
   const getSignedS3Url = async (s3Url: string) => {
+    if (!s3Url) return null;
+    
     const s3Client = new S3Client({
       region: process.env.NEXT_PUBLIC_AWS_REGION!,
       credentials: {
@@ -51,18 +59,15 @@ const MasonryGrid: React.FC = () => {
     let objectKey = '';
 
     if (s3Url.startsWith('s3://')) {
-      // Handle s3://bucket/key
-      const bucketAndKey = s3Url.substring(5); // Remove 's3://'
+      const bucketAndKey = s3Url.substring(5);
       const [bucket, ...keyParts] = bucketAndKey.split('/');
       bucketName = bucket;
       objectKey = keyParts.join('/');
     } else if (s3Url.startsWith('https://')) {
-      // Handle full HTTPS URL
       const url = new URL(s3Url);
       bucketName = url.hostname.split('.')[0];
-      objectKey = url.pathname.substring(1); // Remove leading '/'
+      objectKey = url.pathname.substring(1);
     } else {
-      // Handle plain object key
       objectKey = s3Url;
     }
 
@@ -76,20 +81,29 @@ const MasonryGrid: React.FC = () => {
   };
 
   const handleVideoClick = async (item: SplatItem) => {
-    try {
-      const signedSplatSrc = await getSignedS3Url(item.splatSrc);
-      console.log("Splat url that is in the db", item.splatSrc);
-      if (signedSplatSrc) {
-        router.push(`/viewer?splatUrl=${encodeURIComponent(signedSplatSrc)}`);
-      }
-    } catch (error) {
-      console.error("Error signing splatSrc:", error);
+    console.log("Sending item:", item); // Debug log
+    if (item.splatSrc) {
+      const url = `/viewer?${new URLSearchParams({
+        splatUrl: item.splatSrc,
+        description: item.description || '',
+        name: item.name || '',
+      })}`;
+      console.log("Navigation URL:", url); // Debug log
+      router.push(url);
     }
   };
+  
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className='relative'>
-      <div className='columns-1 sm:columns-2 lg:columns-3 py-10 md:py-20 gap-4'>
+    <div className="relative w-full px-4 sm:px-6 lg:px-8">
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 py-10 md:py-20 [&>div]:mb-4">
         {videoItems.map((item) => (
           <VideoItem
             key={item.id}
@@ -100,6 +114,4 @@ const MasonryGrid: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default MasonryGrid;
+}
