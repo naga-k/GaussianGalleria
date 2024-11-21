@@ -1,26 +1,32 @@
-// /app/viewer/components/SplatViewer.tsx
+// app/viewer/components/SplatViewer.tsx
 'use client';
-
-import React, { useRef, useCallback, useMemo } from 'react';
+import React, { useRef, useCallback, useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stats, PerspectiveCamera, Html } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { CameraController } from './CameraController';
 import { ControlsUI } from './ControlsUI';
 import { SceneSetup } from './SceneSetup';
-// import { CameraInfo } from './CameraInfo';
 import * as THREE from 'three'; 
 import { ErrorBoundary } from 'react-error-boundary';
+import { InfoPanel } from './InfoPanel';
 
 interface SplatViewerProps {
   splatUrl: string | null;
   onClose: () => void;
+  description?: string;
+  name?: string;
 }
 
-export default function SplatViewer({ splatUrl, onClose }: SplatViewerProps) {
+export default function SplatViewer({ 
+  splatUrl, 
+  onClose, 
+  description = "", 
+  name = "" 
+}: SplatViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
   const controlsRef = useRef<OrbitControlsImpl>(null);
+  const [showInfo, setShowInfo] = useState(false);
 
   const handleReset = useCallback(() => {
     if (controlsRef.current) {
@@ -46,7 +52,17 @@ export default function SplatViewer({ splatUrl, onClose }: SplatViewerProps) {
 
   return (
     <div ref={containerRef} className="fixed inset-0 bg-black z-50">
-      <ControlsUI onReset={handleReset} onClose={onClose} />
+      <ControlsUI 
+        onReset={handleReset} 
+        onClose={onClose} 
+        onInfoClick={() => setShowInfo(true)}
+      />
+      <InfoPanel 
+        description={description}
+        name={name}
+        isOpen={showInfo}
+        onClose={() => setShowInfo(false)}
+      />
       <Canvas>
         <ErrorBoundary 
           fallback={
@@ -76,7 +92,6 @@ export default function SplatViewer({ splatUrl, onClose }: SplatViewerProps) {
           />
           <SceneSetup splatUrl={splatUrl} />
           <primitive object={gridHelper} />
-          {/* <CameraInfo /> */}
         </ErrorBoundary>
       </Canvas>
     </div>

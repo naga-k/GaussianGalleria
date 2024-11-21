@@ -1,13 +1,13 @@
 // app/viewer/page.tsx
 'use client';
-
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import SplatViewer from './components/SplatViewer';
 
 const Viewer: React.FC = () => {
   const router = useRouter();
-
+  
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ViewerContent router={router} />
@@ -15,25 +15,38 @@ const Viewer: React.FC = () => {
   );
 };
 
-const ViewerContent: React.FC<{ router: ReturnType<typeof useRouter> }> = ({ router }) => {
+interface ViewerContentProps {
+  router: AppRouterInstance;
+}
+
+const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
   const searchParams = useSearchParams();
   const splatUrl = searchParams.get('splatUrl');
-  const [url, setUrl] = useState<string | null>(null);
+  const description = searchParams.get('description');
+  const name = searchParams.get('name');
 
   useEffect(() => {
     if (splatUrl) {
-      setUrl(splatUrl);
-      console.log('Splat URL:', splatUrl);
-    } else {
-      setUrl(null);
+      console.log("Params received:", { 
+        splatUrl, 
+        description, 
+        name 
+      });
     }
-  }, [splatUrl]);
+  }, [splatUrl, description, name]);
 
   const handleClose = () => {
     router.push('/');
   };
 
-  return <SplatViewer splatUrl={url} onClose={handleClose} />;
+  return (
+    <SplatViewer 
+      splatUrl={splatUrl ? decodeURIComponent(splatUrl) : null}
+      description={description ? decodeURIComponent(description) : 'No description available'}
+      name={name ? decodeURIComponent(name) : 'Untitled'}
+      onClose={handleClose}
+    />
+  );
 };
 
 export default Viewer;
