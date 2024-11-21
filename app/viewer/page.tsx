@@ -1,8 +1,8 @@
-// app/viewer/page.tsx
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import SplatViewer from './components/SplatViewer';
 
 const Viewer: React.FC = () => {
@@ -15,14 +15,18 @@ const Viewer: React.FC = () => {
   );
 };
 
-const ViewerContent = ({ router }) => {
+interface ViewerContentProps {
+  router: AppRouterInstance;
+}
+
+const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
   const searchParams = useSearchParams();
   const splatUrl = searchParams.get('splatUrl');
   const description = searchParams.get('description');
   const name = searchParams.get('name');
 
   useEffect(() => {
-    console.log("Params received:", { splatUrl, description, name }); // Debug log
+    console.log("Params received:", { splatUrl, description, name });
   }, [splatUrl, description, name]);
 
   return (

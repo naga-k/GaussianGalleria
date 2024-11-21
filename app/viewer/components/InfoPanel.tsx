@@ -1,5 +1,4 @@
 // app/viewer/components/InfoPanel.tsx
-import { useState } from 'react';
 import { X } from 'lucide-react';
 
 interface InfoPanelProps {
