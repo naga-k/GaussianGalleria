@@ -1,20 +1,18 @@
 // app/components/VideoItem.tsx
 import React, { useRef, useState, useEffect } from 'react';
 
-// app/components/VideoItem.tsx
 interface VideoItem {
   id: number;
   name: string | null;
   splatSrc: string;
   src: string;
-  description: string;  // Match the type exactly with SplatItem
+  description: string;
 }
 
 interface VideoItemProps {
   item: VideoItem;
-  onClick: (item: VideoItem) => void;  // Changed to pass full item
+  onClick: (item: VideoItem) => void;
 }
-
 
 export default function VideoItem({ item, onClick }: VideoItemProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -30,10 +28,9 @@ export default function VideoItem({ item, onClick }: VideoItemProps) {
     }
   }, []);
 
-  // Add this new useEffect
-useEffect(() => {
-  console.log('VideoItem received:', item);
-}, [item]);
+  useEffect(() => {
+    console.log('VideoItem received:', item);
+  }, [item]);
 
   const handleVideoLoad = () => {
     setIsLoaded(true);
@@ -43,10 +40,8 @@ useEffect(() => {
   };
 
   const handleVideoHover = (isHovering: boolean) => {
-    // Only handle hover for desktop
     const video = videoRef.current;
     if (!video || isMobile) return;
-
     if (isHovering) {
       video.play().catch(() => {});
     } else {
@@ -60,7 +55,7 @@ useEffect(() => {
     e.stopPropagation();
     
     if (item.splatSrc) {
-      onClick(item);  // Pass entire item instead of just splatSrc
+      onClick(item);
     }
   };
 

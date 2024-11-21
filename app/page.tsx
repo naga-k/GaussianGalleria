@@ -1,6 +1,5 @@
 // app/page.tsx
 'use client';
-
 import React from 'react';
 import MasonryGrid from './components/MasonryGrid';
 
@@ -19,8 +18,8 @@ export default function Home() {
            </h1>
         </div>
       </header>
-      <div className="mx-auto  max-w-7xl min-h-screen">
-      <MasonryGrid />
+      <div className="mx-auto max-w-7xl min-h-screen">
+        <MasonryGrid />
       </div>
     </div>
   );

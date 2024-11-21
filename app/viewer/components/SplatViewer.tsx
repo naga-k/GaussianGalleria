@@ -1,5 +1,5 @@
+// app/viewer/components/SplatViewer.tsx
 'use client';
-
 import React, { useRef, useCallback, useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stats, PerspectiveCamera, Html } from '@react-three/drei';

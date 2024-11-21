@@ -29,7 +29,7 @@ export default function MasonryGrid() {
           const itemsWithSignedUrls = await Promise.all(data.map(async (item) => ({
             ...item,
             src: await getSignedS3Url(item.src),
-            splatSrc: await getSignedS3Url(item.splatSrc) // Pre-sign splat URLs
+            splatSrc: await getSignedS3Url(item.splatSrc)
           })));
           setVideoItems(itemsWithSignedUrls);
         } else {
@@ -81,14 +81,14 @@ export default function MasonryGrid() {
   };
 
   const handleVideoClick = async (item: SplatItem) => {
-    console.log("Sending item:", item); // Debug log
+    console.log("Sending item:", item);
     if (item.splatSrc) {
       const url = `/viewer?${new URLSearchParams({
         splatUrl: item.splatSrc,
         description: item.description || '',
         name: item.name || '',
       })}`;
-      console.log("Navigation URL:", url); // Debug log
+      console.log("Navigation URL:", url);
       router.push(url);
     }
   };

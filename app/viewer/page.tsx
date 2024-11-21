@@ -1,5 +1,5 @@
+// app/viewer/page.tsx
 'use client';
-
 import React, { useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
