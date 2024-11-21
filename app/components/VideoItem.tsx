@@ -79,8 +79,9 @@ export default function VideoItem({ item, onClick }: VideoItemProps) {
         playsInline
         muted
         loop
-        preload="auto"
+        preload="metadata"
         controlsList="nodownload nofullscreen noremoteplayback"
+        disablePictureInPicture
         style={{ maxHeight: '80vh' }}
       />
     </div>

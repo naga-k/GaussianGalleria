@@ -18,7 +18,12 @@ interface SplatViewerProps {
   name?: string;
 }
 
-export default function SplatViewer({ splatUrl, onClose, description = "", name = "" }: SplatViewerProps) {
+export default function SplatViewer({ 
+  splatUrl, 
+  onClose, 
+  description = "", 
+  name = "" 
+}: SplatViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const [showInfo, setShowInfo] = useState(false);
@@ -29,6 +34,7 @@ export default function SplatViewer({ splatUrl, onClose, description = "", name 
     }
   }, []);
 
+  // Create GridHelper using useMemo to prevent re-creation on every render
   const gridHelper = useMemo(() => new THREE.GridHelper(100, 100, 'white', 'gray'), []);
 
   if (!splatUrl) {
