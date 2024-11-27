@@ -4,6 +4,9 @@ import path from 'path';
 import { db } from '../../db/db';
 import { splats } from '../../db/schema';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // app/api/fetchVideoItems/route.ts
 interface VideoItem {
   id?: number;
@@ -18,7 +21,7 @@ interface DbItem {
   name: string | null;
   splat: string | null;
   video: string | null;
-  description: string | null;  // Add this to your schema if not present
+  description: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
 }
@@ -43,7 +46,13 @@ export async function GET() {
       description: item.description || 'No description available'
     })));
 
-    return NextResponse.json(combinedData);
+    return NextResponse.json(combinedData, {
+      headers: {
+        'Cache-Control': 'no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      }
+    });
   } catch (error) {
     console.error("Error fetching video items:", error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
