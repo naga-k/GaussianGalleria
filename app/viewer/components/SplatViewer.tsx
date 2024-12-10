@@ -1,6 +1,6 @@
 // app/viewer/components/SplatViewer.tsx
 'use client';
-import React, { useRef, useCallback, useMemo, useState } from 'react';
+import React, { useRef, useCallback, useMemo, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stats, PerspectiveCamera, Html } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
@@ -10,23 +10,100 @@ import { SceneSetup } from './SceneSetup';
 import * as THREE from 'three'; 
 import { ErrorBoundary } from 'react-error-boundary';
 import { InfoPanel } from './InfoPanel';
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 interface SplatViewerProps {
-  splatUrl: string | null;
+  // splatUrl: string | null;
   onClose: () => void;
-  description?: string;
-  name?: string;
+  // description?: string;
+  // name?: string;
+  id?: number;
+}
+
+interface SceneItem {
+  id: number;
+  name: string | null;
+  description: string | null;
+  splatUrl: string | null;
 }
 
 export default function SplatViewer({ 
-  splatUrl, 
+  // splatUrl, 
   onClose, 
-  description = "", 
-  name = "" 
+  // description = "", 
+  // name = "",
+  id = 1,
 }: SplatViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<OrbitControlsImpl>(null);
+  // const [loading, setLoading] = useState(false);
+  const [sceneItem, setSceneItem] = useState<SceneItem[]>([]);
   const [showInfo, setShowInfo] = useState(false);
+
+  useEffect(() => {
+    const fetchSceneItem = async () => {
+      // setLoading(true);
+      try {
+        const response = await fetch('api/fetchSceneDetailsWithID' + new URLSearchParams({
+          id: id.toString(),
+        }).toString());
+        const sceneItem: SceneItem = await response.json().then(async (item) => {
+          return {
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            splatUrl: await getSignedS3Url(item.splatSrc)
+          }
+        });
+        setSceneItem([sceneItem]);
+      } catch (error) {
+        console.error("Error fetching scene items:", error);
+      } finally {
+        // setLoading(false);
+      }
+    };
+    fetchSceneItem();
+  }, [sceneItem, id]);
+
+  const getSignedS3Url = async (s3Url: string) => {
+    if (!s3Url) return null;
+    
+    const s3Client = new S3Client({
+      region: process.env.NEXT_PUBLIC_AWS_REGION!,
+      credentials: {
+        accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+      },
+    });
+
+    let bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!;
+    let objectKey = '';
+
+    // Handle different URL formats
+    if (s3Url.startsWith('s3://')) {
+      const bucketAndKey = s3Url.substring(5); // Remove 's3://'
+      const [bucket, ...keyParts] = bucketAndKey.split('/');
+      bucketName = bucket;
+      objectKey = keyParts.join('/');
+    } else if (s3Url.startsWith('https://')) {
+      // Handle full HTTPS URL
+      const url = new URL(s3Url);
+      bucketName = url.hostname.split('.')[0];
+      objectKey = url.pathname.substring(1); // Remove leading '/'
+    } else {
+      // Handle plain object key
+      objectKey = s3Url;
+    }
+
+    const command = new GetObjectCommand({ Bucket: bucketName, Key: objectKey });
+    try {
+      return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    } catch (error) {
+      console.error("Error generating presigned URL:", error);
+      return null;
+    }
+  };
 
   const handleReset = useCallback(() => {
     if (controlsRef.current) {
@@ -37,7 +114,7 @@ export default function SplatViewer({
   // Create GridHelper using useMemo to prevent re-creation on every render
   const gridHelper = useMemo(() => new THREE.GridHelper(100, 100, 'white', 'gray'), []);
 
-  if (!splatUrl) {
+  if (!sceneItem[0].splatUrl) {
     return (
       <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
         <div className="text-center">
@@ -58,8 +135,8 @@ export default function SplatViewer({
         onInfoClick={() => setShowInfo(true)}
       />
       <InfoPanel 
-        description={description}
-        name={name}
+        description={sceneItem[0].description ||  ''}
+        name={sceneItem[0].name || ''}
         isOpen={showInfo}
         onClose={() => setShowInfo(false)}
       />
@@ -90,7 +167,7 @@ export default function SplatViewer({
             minPolarAngle={Math.PI * 0.25}
             target={[0, 0, 0]}
           />
-          <SceneSetup splatUrl={splatUrl} />
+          <SceneSetup splatUrl={sceneItem[0].splatUrl || ''} />
           <primitive object={gridHelper} />
         </ErrorBoundary>
       </Canvas>

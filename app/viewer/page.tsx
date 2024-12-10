@@ -41,9 +41,10 @@ const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
 
   return (
     <SplatViewer 
-      splatUrl={splatUrl ? decodeURIComponent(splatUrl) : null}
-      description={description ? decodeURIComponent(description) : 'No description available'}
-      name={name ? decodeURIComponent(name) : 'Untitled'}
+      // splatUrl={splatUrl ? decodeURIComponent(splatUrl) : null}
+      // description={description ? decodeURIComponent(description) : 'No description available'}
+      // name={name ? decodeURIComponent(name) : 'Untitled'}
+      id={1}
       onClose={handleClose}
     />
   );
