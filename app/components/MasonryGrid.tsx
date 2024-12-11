@@ -87,9 +87,7 @@ export default function MasonryGrid() {
     console.log("Sending item:", item);
     if (item.splatSrc) {
       const url = `/viewer?${new URLSearchParams({
-        splatUrl: item.splatSrc,
-        description: item.description || '',
-        name: item.name || '',
+        id: item.id.toString()
       })}`;
       console.log("Navigation URL:", url);
       router.push(url);

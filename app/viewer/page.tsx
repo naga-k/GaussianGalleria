@@ -1,13 +1,13 @@
 // app/viewer/page.tsx
-'use client';
-import React, { useEffect, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import SplatViewer from './components/SplatViewer';
+"use client";
+import React, { useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import SplatViewer from "./components/SplatViewer";
 
 const Viewer: React.FC = () => {
   const router = useRouter();
-  
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ViewerContent router={router} />
@@ -21,29 +21,32 @@ interface ViewerContentProps {
 
 const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
   const searchParams = useSearchParams();
-  const splatUrl = searchParams.get('splatUrl');
-  const description = searchParams.get('description');
-  const name = searchParams.get('name');
+  const id = searchParams.get("id");
+  const splatUrl = searchParams.get("splatUrl");
+  const description = searchParams.get("description");
+  const name = searchParams.get("name");
 
   useEffect(() => {
     if (splatUrl) {
-      console.log("Params received:", { 
-        splatUrl, 
-        description, 
-        name 
+      console.log("Params received:", {
+        id,
+        splatUrl,
+        description,
+        name,
       });
     }
-  }, [splatUrl, description, name]);
+  }, [id, splatUrl, description, name]);
 
   const handleClose = () => {
-    router.push('/');
+    router.push("/");
   };
 
   return (
-    <SplatViewer 
-      splatUrl={splatUrl ? decodeURIComponent(splatUrl) : null}
-      description={description ? decodeURIComponent(description) : 'No description available'}
-      name={name ? decodeURIComponent(name) : 'Untitled'}
+    <SplatViewer
+      // splatUrl={splatUrl ? decodeURIComponent(splatUrl) : null}
+      // description={description ? decodeURIComponent(description) : 'No description available'}
+      // name={name ? decodeURIComponent(name) : 'Untitled'}
+      id={id}
       onClose={handleClose}
     />
   );
