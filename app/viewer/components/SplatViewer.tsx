@@ -14,10 +14,7 @@ import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 interface SplatViewerProps {
-  // splatUrl: string | null;
   onClose: () => void;
-  // description?: string;
-  // name?: string;
   id?: number;
 }
 
@@ -29,15 +26,12 @@ interface SceneItem {
 }
 
 export default function SplatViewer({ 
-  // splatUrl, 
-  onClose, 
-  // description = "", 
-  // name = "",
+  onClose,
   id = 1,
 }: SplatViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<OrbitControlsImpl>(null);
-  // const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false); // For future use
   const [sceneItem, setSceneItem] = useState<SceneItem[]>([]);
   const [showInfo, setShowInfo] = useState(false);
 
@@ -45,9 +39,9 @@ export default function SplatViewer({
     const fetchSceneItem = async () => {
       // setLoading(true);
       try {
-        const response = await fetch('api/fetchSceneDetailsWithID' + new URLSearchParams({
+        const response = await fetch(`api/fetchSceneDetailsWithID?${new URLSearchParams({
           id: id.toString(),
-        }).toString());
+        }).toString()}`);
         const sceneItem: SceneItem = await response.json().then(async (item) => {
           return {
             id: item.id,
@@ -64,7 +58,7 @@ export default function SplatViewer({
       }
     };
     fetchSceneItem();
-  }, [sceneItem, id]);
+  }, []);
 
   const getSignedS3Url = async (s3Url: string) => {
     if (!s3Url) return null;
@@ -114,7 +108,7 @@ export default function SplatViewer({
   // Create GridHelper using useMemo to prevent re-creation on every render
   const gridHelper = useMemo(() => new THREE.GridHelper(100, 100, 'white', 'gray'), []);
 
-  if (!sceneItem[0].splatUrl) {
+  if (!sceneItem.length || !sceneItem[0].splatUrl) {
     return (
       <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
         <div className="text-center">

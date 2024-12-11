@@ -19,11 +19,19 @@ interface SceneItem {
 // Replace DbItem with inferred type
 type DbItem = InferSelectModel<typeof splats>;
 
-export async function GET(
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
   try {
-    const id = parseInt(params.id);
+    const { searchParams } = new URL(request.url);
+    let rawId: string | null = searchParams.get('id');
+    
+    if (!rawId) {
+      return NextResponse.json(
+        { error: 'Id does not exist' },
+        { status: 404 }
+      );
+    }
+
+    const id = parseInt(rawId);
     const dbData: DbItem[] = await db.select()
       .from(splats)
       .where(eq(splats.id, id));
