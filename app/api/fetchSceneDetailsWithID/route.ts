@@ -22,7 +22,7 @@ type DbItem = InferSelectModel<typeof splats>;
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    let rawId: string | null = searchParams.get('id');
+    const rawId: string | null = searchParams.get('id');
     
     if (!rawId) {
       return NextResponse.json(

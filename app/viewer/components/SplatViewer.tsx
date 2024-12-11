@@ -72,7 +72,7 @@ export default function SplatViewer({ onClose, id }: SplatViewerProps) {
       }
     };
     fetchSceneItem();
-  }, []);
+  }, [id]);
 
   const getSignedS3Url = async (s3Url: string) => {
     if (!s3Url) return null;
