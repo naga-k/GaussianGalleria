@@ -1,10 +1,8 @@
-import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
-import { db } from '../../db/db';
-import { splats } from '../../db/schema';
+import { NextResponse } from "next/server";
+import { db } from "../../lib/db/db";
+import { splats } from "../../lib/db/schema";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 // app/api/fetchVideoItems/route.ts
@@ -28,33 +26,31 @@ interface DbItem {
 
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), 'public', 'splatData.json');
-    let jsonData: VideoItem[] = [];
-
-    if (fs.existsSync(filePath)) {
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      jsonData = JSON.parse(fileContents);
-    }
-
-    const dbData: DbItem[] = await db.select().from(splats);
-
-    const combinedData: VideoItem[] = jsonData.concat(dbData.map((item: DbItem) => ({
-      id: item.id,
-      src: item.video || '',
-      splatSrc: item.splat || '',
-      name: item.name || 'Untitled',
-      description: item.description || 'No description available'
-    })));
+    const combinedData: VideoItem[] = await db
+      .select()
+      .from(splats)
+      .then((data) => {
+        return data.map((item: DbItem) => ({
+          id: item.id,
+          src: item.video || "",
+          splatSrc: item.splat || "",
+          name: item.name || "Untitled",
+          description: item.description || "No description available",
+        }));
+      });
 
     return NextResponse.json(combinedData, {
       headers: {
-        'Cache-Control': 'no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-      }
+        "Cache-Control": "no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
     });
   } catch (error) {
     console.error("Error fetching video items:", error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
