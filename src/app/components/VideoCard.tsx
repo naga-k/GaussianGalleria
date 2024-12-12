@@ -1,20 +1,13 @@
 // app/components/VideoItem.tsx
 import React, { useRef, useState, useEffect } from 'react';
-
-interface VideoItem {
-  id: number;
-  name: string | null;
-  splatSrc: string;
-  src: string;
-  description: string;
-}
+import VideoItem from '../models/VideoItem';
 
 interface VideoItemProps {
   item: VideoItem;
   onClick: (item: VideoItem) => void;
 }
 
-export default function VideoItem({ item, onClick }: VideoItemProps) {
+export default function VideoCard({ item, onClick }: VideoItemProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -54,7 +47,7 @@ export default function VideoItem({ item, onClick }: VideoItemProps) {
     e.preventDefault();
     e.stopPropagation();
     
-    if (item.splatSrc) {
+    if (item.splatUrl) {
       onClick(item);
     }
   };

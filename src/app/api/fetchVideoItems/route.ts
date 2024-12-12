@@ -1,41 +1,33 @@
 import { NextResponse } from "next/server";
 import { db } from "../../lib/db/db";
 import { splats } from "../../lib/db/schema";
+import VideoItem from "../../models/VideoItem";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 // app/api/fetchVideoItems/route.ts
-interface VideoItem {
-  id?: number;
-  src: string;
-  splatSrc: string;
-  name: string | null;
-  description: string | null;
-}
 
-interface DbItem {
+interface VideoQueryResult {
   id: number;
-  name: string | null;
-  splat: string | null;
   video: string | null;
-  description: string | null;
-  createdAt: Date | null;
-  updatedAt: Date | null;
+  splat: string | null;
 }
 
 export async function GET() {
   try {
     const combinedData: VideoItem[] = await db
-      .select()
+      .select({
+        id: splats.id,
+        video: splats.video,
+        splat: splats.splat,
+      })
       .from(splats)
       .then((data) => {
-        return data.map((item: DbItem) => ({
+        return data.map((item: VideoQueryResult) => ({
           id: item.id,
           src: item.video || "",
-          splatSrc: item.splat || "",
-          name: item.name || "Untitled",
-          description: item.description || "No description available",
+          splatUrl: item.splat || "",
         }));
       });
 

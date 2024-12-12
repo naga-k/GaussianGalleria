@@ -2,22 +2,19 @@ import { NextResponse } from "next/server";
 import { db } from "../../lib/db/db";
 import { splats } from "../../lib/db/schema";
 import { eq } from "drizzle-orm";
-import type { InferSelectModel } from "drizzle-orm";
+import SceneItem from "../../models/SceneItem";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 // app/api/fetchSceneDetailsWithID/route.ts
-interface SceneItem {
-  id?: number;
-  src: string;
-  splatSrc: string;
+
+interface SceneQueryResult {
+  id: number;
   name: string | null;
   description: string | null;
+  splat: string | null;
 }
-
-// Replace DbItem with inferred type
-type DbItem = InferSelectModel<typeof splats>;
 
 export async function GET(request: Request) {
   try {
@@ -29,25 +26,29 @@ export async function GET(request: Request) {
     }
 
     const id = parseInt(rawId);
-    const dbData: DbItem[] = await db
-      .select()
+    const sceneItems: SceneItem[] = await db
+      .select({
+        id: splats.id,
+        name: splats.name,
+        description: splats.description,
+        splat: splats.splat,
+      })
       .from(splats)
-      .where(eq(splats.id, id));
+      .where(eq(splats.id, id))
+      .then((data: SceneQueryResult[]) => {
+        return data.map((item: SceneQueryResult) => ({
+          id: item.id,
+          name: item.name || "Untitled",
+          description: item.description || "No description available",
+          splatUrl: item.splat || "",
+        }));
+      });
 
-    if (!dbData.length) {
+    if (!sceneItems.length) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    const item = dbData[0];
-    const sceneItem: SceneItem = {
-      id: item.id,
-      src: item.video || "",
-      splatSrc: item.splat || "",
-      name: item.name || "Untitled",
-      description: item.description || "No description available",
-    };
-
-    return NextResponse.json(sceneItem, {
+    return NextResponse.json(sceneItems[0], {
       headers: {
         "Cache-Control": "no-store, must-revalidate",
         Pragma: "no-cache",

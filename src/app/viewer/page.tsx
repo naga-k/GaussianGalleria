@@ -4,7 +4,7 @@ import React, { useEffect, Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import SplatViewer from "./components/SplatViewer";
-import SceneItem from "./models/SceneItem";
+import SceneItem from "../models/SceneItem";
 import { getSignedS3Url } from "../lib/cloud/s3";
 
 const Viewer: React.FC = () => {
@@ -30,7 +30,7 @@ const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
   useEffect(() => {
     setLoading(true);
     fetchSceneItem(id)
-      .then((sceneItem) => {
+      .then((sceneItem: SceneItem) => {
         setSceneItem(sceneItem);
       })
       .catch((error) => {
@@ -65,7 +65,7 @@ const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
         id: item.id,
         name: item.name,
         description: item.description,
-        splatUrl: await getSignedS3Url(item.splatSrc),
+        splatUrl: await getSignedS3Url(item.splatUrl),
       };
     });
   };

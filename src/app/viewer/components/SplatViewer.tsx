@@ -15,7 +15,7 @@ import { SceneSetup } from "./SceneSetup";
 import * as THREE from "three";
 import { ErrorBoundary } from "react-error-boundary";
 import { InfoPanel } from "./InfoPanel";
-import SceneItem from "../models/SceneItem";
+import SceneItem from "../../models/SceneItem";
 
 interface SplatViewerProps {
   onClose: () => void;
@@ -104,7 +104,7 @@ export default function SplatViewer({ onClose, sceneItem }: SplatViewerProps) {
             minPolarAngle={Math.PI * 0.25}
             target={[0, 0, 0]}
           />
-          <SceneSetup splatUrl={sceneItem.splatUrl || ""} />
+          <SceneSetup splatUrl={sceneItem.splatUrl} />
           <primitive object={gridHelper} />
         </ErrorBoundary>
       </Canvas>
