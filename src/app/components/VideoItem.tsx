@@ -30,7 +30,7 @@ export default function VideoItem({ item, onClick }: VideoItemProps) {
 
   useEffect(() => {
     console.log('VideoItem received:', item);
-  }, [item]);
+  });
 
   const handleVideoLoad = () => {
     setIsLoaded(true);
