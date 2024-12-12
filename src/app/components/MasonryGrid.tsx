@@ -20,15 +20,16 @@ export default function MasonryGrid() {
 
   useEffect(() => {
     setLoading(true);
-    try {
-      fetchVideoItems().then((items) => {
+    fetchVideoItems()
+      .then((items) => {
         setVideoItems(items);
+      })
+      .catch((error) => {
+        console.error("Error fetching video items:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-    } catch (error) {
-      console.error("Error fetching video items:", error);
-    } finally {
-      setLoading(false);
-    }
   }, []);
 
   const fetchVideoItems = async () => {

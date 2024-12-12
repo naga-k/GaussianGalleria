@@ -1,12 +1,6 @@
 // app/viewer/components/SplatViewer.tsx
 "use client";
-import React, {
-  useRef,
-  useCallback,
-  useMemo,
-  useState,
-  useEffect,
-} from "react";
+import React, { useRef, useCallback, useMemo, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -21,64 +15,17 @@ import { SceneSetup } from "./SceneSetup";
 import * as THREE from "three";
 import { ErrorBoundary } from "react-error-boundary";
 import { InfoPanel } from "./InfoPanel";
-import { getSignedS3Url } from "../../lib/cloud/s3";
+import SceneItem from "../models/SceneItem";
 
 interface SplatViewerProps {
   onClose: () => void;
-  id: string | null;
+  sceneItem: SceneItem | null;
 }
 
-interface SceneItem {
-  id: number;
-  name: string | null;
-  description: string | null;
-  splatUrl: string | null;
-}
-
-export default function SplatViewer({ onClose, id }: SplatViewerProps) {
+export default function SplatViewer({ onClose, sceneItem }: SplatViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<OrbitControlsImpl>(null);
-  const [loading, setLoading] = useState(false); // For future use
-  const [sceneItem, setSceneItem] = useState<SceneItem[]>([]);
   const [showInfo, setShowInfo] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    try {
-      if (id) {
-        fetchSceneItem(id).then((sceneItem) => {
-          setSceneItem([sceneItem]);
-        });
-      } else {
-        throw new Error("Viewer - Param not provided: 'id'");
-      }
-    } catch (error) {
-      console.error("Error fetching scene items:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [id]);
-
-  const fetchSceneItem = async (id: string) => {
-    const response = await fetch(
-      `api/fetchSceneDetailsWithID?${new URLSearchParams({
-        id: id,
-      }).toString()}`
-    );
-
-    if (!response.ok) {
-      throw new Error(`${response.status}`);
-    }
-
-    return await response.json().then(async (item) => {
-      return {
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        splatUrl: await getSignedS3Url(item.splatSrc),
-      };
-    });
-  };
 
   const handleReset = useCallback(() => {
     if (controlsRef.current) {
@@ -92,17 +39,7 @@ export default function SplatViewer({ onClose, id }: SplatViewerProps) {
     []
   );
 
-  if (loading) {
-    return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-        <div className="text-center">
-          <p>Fetching Splat....</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!sceneItem.length || !sceneItem[0].splatUrl) {
+  if (!sceneItem || !sceneItem.splatUrl) {
     return (
       <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
         <div className="text-center">
@@ -126,8 +63,8 @@ export default function SplatViewer({ onClose, id }: SplatViewerProps) {
         onInfoClick={() => setShowInfo(true)}
       />
       <InfoPanel
-        description={sceneItem[0].description || ""}
-        name={sceneItem[0].name || ""}
+        description={sceneItem.description || ""}
+        name={sceneItem.name || ""}
         isOpen={showInfo}
         onClose={() => setShowInfo(false)}
       />
@@ -167,7 +104,7 @@ export default function SplatViewer({ onClose, id }: SplatViewerProps) {
             minPolarAngle={Math.PI * 0.25}
             target={[0, 0, 0]}
           />
-          <SceneSetup splatUrl={sceneItem[0].splatUrl || ""} />
+          <SceneSetup splatUrl={sceneItem.splatUrl || ""} />
           <primitive object={gridHelper} />
         </ErrorBoundary>
       </Canvas>
