@@ -1,9 +1,9 @@
 // app/components/MasonryGrid.tsx
-'use client';
-import React, { useState, useEffect } from 'react';
-import VideoItem from './VideoItem';
-import { useRouter } from 'next/navigation';
-import { getSignedS3Url } from '../lib/cloud/s3';
+"use client";
+import React, { useState, useEffect } from "react";
+import VideoItem from "./VideoItem";
+import { useRouter } from "next/navigation";
+import { getSignedS3Url } from "../lib/cloud/s3";
 
 interface SplatItem {
   id: number;
@@ -19,41 +19,46 @@ export default function MasonryGrid() {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchVideoItems = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('/api/fetchVideoItems');
-        const data = await response.json();
-        if (Array.isArray(data)) {
-          const itemsWithSignedUrls = await Promise.all(data.map(async (item) => ({
-            ...item,
-            src: await getSignedS3Url(item.src),
-            splatSrc: await getSignedS3Url(item.splatSrc)
-          })));
-          setVideoItems(itemsWithSignedUrls);
-        } else {
-          console.error('Unexpected API response format:', data);
-        }
-      } catch (error) {
-        console.error("Error fetching video items:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchVideoItems();
+    setLoading(true);
+    try {
+      fetchVideoItems().then((items) => {
+        setVideoItems(items);
+      });
+    } catch (error) {
+      console.error("Error fetching video items:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  const fetchVideoItems = async () => {
+    const response = await fetch("/api/fetchVideoItems");
+    const data = await response.json();
+
+    if (!Array.isArray(data)) {
+      throw new Error(`Unexpected API response format: ${data}`);
+    }
+
+    return await Promise.all<Promise<SplatItem>>(
+      data.map(async (item) => ({
+        ...item,
+        src: await getSignedS3Url(item.src),
+        splatSrc: await getSignedS3Url(item.splatSrc),
+      }))
+    );
+  };
 
   const handleVideoClick = async (item: SplatItem) => {
     console.log("Sending item:", item);
     if (item.splatSrc) {
       const url = `/viewer?${new URLSearchParams({
-        id: item.id.toString()
+        id: item.id.toString(),
       })}`;
       console.log("Navigation URL:", url);
       router.push(url);
     }
   };
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">

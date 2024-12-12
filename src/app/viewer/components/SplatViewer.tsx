@@ -43,35 +43,42 @@ export default function SplatViewer({ onClose, id }: SplatViewerProps) {
   const [showInfo, setShowInfo] = useState(false);
 
   useEffect(() => {
-    const fetchSceneItem = async () => {
-      setLoading(true);
+    setLoading(true);
+    try {
       if (id) {
-        try {
-          const response = await fetch(
-            `api/fetchSceneDetailsWithID?${new URLSearchParams({
-              id: id,
-            }).toString()}`
-          );
-          const sceneItem: SceneItem = await response
-            .json()
-            .then(async (item) => {
-              return {
-                id: item.id,
-                name: item.name,
-                description: item.description,
-                splatUrl: await getSignedS3Url(item.splatSrc),
-              };
-            });
+        fetchSceneItem(id).then((sceneItem) => {
           setSceneItem([sceneItem]);
-        } catch (error) {
-          console.error("Error fetching scene items:", error);
-        } finally {
-          setLoading(false); // If possible, hide loader after scene has completed rendering
-        }
+        });
+      } else {
+        throw new Error("Viewer - Param not provided: 'id'");
       }
-    };
-    fetchSceneItem();
+    } catch (error) {
+      console.error("Error fetching scene items:", error);
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
+
+  const fetchSceneItem = async (id: string) => {
+    const response = await fetch(
+      `api/fetchSceneDetailsWithID?${new URLSearchParams({
+        id: id,
+      }).toString()}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`${response.status}`);
+    }
+
+    return await response.json().then(async (item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        splatUrl: await getSignedS3Url(item.splatSrc),
+      };
+    });
+  };
 
   const handleReset = useCallback(() => {
     if (controlsRef.current) {
