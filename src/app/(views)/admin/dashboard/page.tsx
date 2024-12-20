@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import AuthContainer from "../components/AuthContainer";
 
 export default function DashBoard() {
+  const router = useRouter();
   return (
-    <AuthContainer>
+    <AuthContainer fallback={() => {router.push("/admin");}}>
       <DashboardContainer />
     </AuthContainer>
   );

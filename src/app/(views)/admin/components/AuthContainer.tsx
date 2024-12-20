@@ -1,13 +1,20 @@
 // app/admin/page.tsx
 "use client";
+import LoadSpinner from "@/src/app/components/LoadSpinner";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
+type FallbackFunction = () => void;
+
 interface AuthContainerProps {
+  fallback: FallbackFunction | null;
   children: ReactNode;
 }
 
-export default function AuthContainer({ children }: AuthContainerProps) {
+export default function AuthContainer({
+  fallback = null,
+  children,
+}: AuthContainerProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(false);
@@ -19,7 +26,11 @@ export default function AuthContainer({ children }: AuthContainerProps) {
         const result = response.ok;
         setIsAuth(result);
         if (!result) {
-          router.push("/admin");
+          if (fallback) {
+            fallback();
+          } else {
+            return null;
+          }
         }
       })
       .catch((error) => {
@@ -28,14 +39,14 @@ export default function AuthContainer({ children }: AuthContainerProps) {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [router, isAuth]);
+  }, [router, isAuth, fallback]);
 
   const handleAuthCheck = async () => {
     return await fetch("/api/admin/verifyAuth");
   };
 
   if (isLoading) {
-    return <>Validating Auth...</>;
+    return <LoadSpinner />;
   } else {
     if (isAuth) {
       return <>{children}</>;

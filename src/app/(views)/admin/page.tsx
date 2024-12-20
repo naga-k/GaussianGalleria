@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import UserCredentials from "../../lib/definitions/auth/UserCredentials";
+import LoadSpinner from "../../components/LoadSpinner";
 
 export default function Admin() {
   const router = useRouter();
@@ -67,7 +68,7 @@ export default function Admin() {
   };
 
   if (isLoading) {
-    return <>Validating Auth...</>;
+    return <LoadSpinner />;
   } else {
     if (!isAuth) {
       return (
@@ -95,7 +96,7 @@ export default function Admin() {
                 required
               />
               <button
-                className="w-fit px-4 py-2 bg-cyan-800 hover:bg-cyan-600 font-bold rounded"
+                className="w-fit px-4 py-2 bg-teal-800 hover:bg-teal-600 font-bold rounded"
                 type="submit"
               >
                 Login
