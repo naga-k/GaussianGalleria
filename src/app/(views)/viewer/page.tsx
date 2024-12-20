@@ -4,8 +4,8 @@ import React, { useEffect, Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import SplatViewer from "./components/SplatViewer";
-import SceneItem from "../models/SceneItem";
-import { getSignedS3Url } from "../lib/cloud/s3";
+import SceneItem from "../../lib/definitions/SceneItem";
+import { getSignedS3Url } from "../../lib/cloud/s3";
 
 const Viewer: React.FC = () => {
   const router = useRouter();

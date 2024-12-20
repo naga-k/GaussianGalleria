@@ -1,7 +1,7 @@
 // app/components/MasonryGrid.tsx
 "use client";
 import React, { useState, useEffect } from "react";
-import VideoItem from "../models/VideoItem";
+import VideoItem from "../lib/definitions/VideoItem";
 import VideoCard from "./VideoCard";
 import { useRouter } from "next/navigation";
 import { getSignedS3Url } from "../lib/cloud/s3";
