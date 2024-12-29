@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import VideoItem from "../models/VideoItem";
 import VideoCard from "./VideoCard";
 import { useRouter } from "next/navigation";
-import { getSignedS3Url } from "../lib/cloud/s3";
 
 export default function MasonryGrid() {
   const [videoItems, setVideoItems] = useState<VideoItem[]>([]);
@@ -33,13 +32,26 @@ export default function MasonryGrid() {
       throw new Error(`Unexpected API response format: ${data}`);
     }
 
-    return await Promise.all<Promise<VideoItem>>(
-      data.map(async (item) => ({
-        ...item,
-        src: await getSignedS3Url(item.src),
-        splatUrl: await getSignedS3Url(item.splatUrl),
-      }))
-    );
+    // Only collect src URLs
+    const urlsToSign = data.map(item => item.src).filter(Boolean);
+
+    // Sign all URLs in one request
+    const signedResponse = await fetch('/api/s3-presign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ urls: urlsToSign })
+    });
+    
+    const { signedUrls } = await signedResponse.json();
+    
+    // Create a map for src URLs only
+    const urlMap = new Map(urlsToSign.map((url, i) => [url, signedUrls[i]]));
+
+    // Map the signed src URLs back to items
+    return data.map(item => ({
+      ...item,
+      src: urlMap.get(item.src),
+    }));
   };
 
   const handleVideoClick = async (item: VideoItem) => {
