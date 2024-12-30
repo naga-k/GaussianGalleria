@@ -5,14 +5,14 @@ export const getSignedS3Url = async (s3Url: string) => {
   if (!s3Url) return null;
 
   const s3Client = new S3Client({
-    region: process.env.AWS_REGION!,
+    region: process.env.NEXT_PUBLIC_AWS_REGION!,
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+      accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
     },
   });
 
-  let bucketName = process.env.AWS_BUCKET_NAME!;
+  let bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!;
   let objectKey = "";
 
   // Handle different URL formats

@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import SplatViewer from "./components/SplatViewer";
 import SceneItem from "../../lib/definitions/SceneItem";
+import { getSignedS3Url } from "../../lib/cloud/s3";
 
 const Viewer: React.FC = () => {
   const router = useRouter();
@@ -53,27 +54,20 @@ const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
 
     if (!response.ok) {
       throw new Error(
-        `${response.status}: ${await response.json().then((body) => body.error)}`
+        `${response.status}: ${await response.json().then((body) => {
+          return body.error;
+        })}`
       );
     }
 
-    const item = await response.json();
-
-    // Sign the URL using the API
-    const signedResponse = await fetch('/api/s3-presign', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ urls: [item.splatUrl] })
+    return await response.json().then(async (item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        splatUrl: await getSignedS3Url(item.splatUrl),
+      };
     });
-
-    const { signedUrls } = await signedResponse.json();
-    
-    return {
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      splatUrl: signedUrls[0], // Get the first (and only) signed URL
-    };
   };
 
   const handleClose = () => {
