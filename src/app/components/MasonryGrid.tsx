@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import VideoItem from "../lib/definitions/VideoItem";
 import VideoCard from "./VideoCard";
 import { useRouter } from "next/navigation";
+import LoadSpinner from "./LoadSpinner";
 
 export default function MasonryGrid() {
   const [videoItems, setVideoItems] = useState<VideoItem[]>([]);
