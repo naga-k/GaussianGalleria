@@ -4,6 +4,13 @@ import { NextResponse } from "next/server";
 export async function POST() {
   const authHandler = new AuthHandler();
   try {
+    if (!(await authHandler.verifyAuth())) {
+      return NextResponse.json(
+        { error: "Non-existent Session" },
+        { status: 403 }
+      );
+    }
+
     await authHandler.logout();
     
     return NextResponse.json(

@@ -79,7 +79,7 @@ export default function Admin() {
               onSubmit={handleSubmit}
             >
               <h1 className="w-fit my-8 px-4 font-bold text-lg ">
-                Admin Log In
+                Log In to DiffStudio
               </h1>
               <input
                 className="my-8 px-4 py-2 bg-inherit border-2 rounded"
