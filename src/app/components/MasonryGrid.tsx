@@ -34,22 +34,22 @@ export default function MasonryGrid() {
     }
 
     // Only collect src URLs
-    const urlsToSign = data.map(item => item.src).filter(Boolean);
+    const urlsToSign = data.map((item) => item.src).filter(Boolean);
 
     // Sign all URLs in one request
-    const signedResponse = await fetch('/api/s3-presign', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ urls: urlsToSign })
+    const signedResponse = await fetch("/api/s3-presign", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ urls: urlsToSign }),
     });
-    
+
     const { signedUrls } = await signedResponse.json();
-    
+
     // Create a map for src URLs only
     const urlMap = new Map(urlsToSign.map((url, i) => [url, signedUrls[i]]));
 
     // Map the signed src URLs back to items
-    return data.map(item => ({
+    return data.map((item) => ({
       ...item,
       src: urlMap.get(item.src),
     }));
@@ -67,7 +67,13 @@ export default function MasonryGrid() {
   };
 
   if (loading) {
-    return <LoadSpinner />;
+    return (
+      <>
+        <div className="flex items-center justify-center min-h-screen">
+          <LoadSpinner />
+        </div>
+      </>
+    );
   }
 
   return (

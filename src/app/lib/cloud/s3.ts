@@ -1,41 +1,69 @@
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-export const getSignedS3Url = async (s3Url: string) => {
-  if (!s3Url) return null;
+export default class S3Handler {
+  client: S3Client;
 
-  const s3Client = new S3Client({
-    region: process.env.AWS_REGION!,
-    credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
-  });
-
-  let bucketName = process.env.AWS_BUCKET_NAME!;
-  let objectKey = "";
-
-  // Handle different URL formats
-  if (s3Url.startsWith("s3://")) {
-    const bucketAndKey = s3Url.substring(5); // Remove 's3://'
-    const [bucket, ...keyParts] = bucketAndKey.split("/");
-    bucketName = bucket;
-    objectKey = keyParts.join("/");
-  } else if (s3Url.startsWith("https://")) {
-    // Handle full HTTPS URL
-    const url = new URL(s3Url);
-    bucketName = url.hostname.split(".")[0];
-    objectKey = url.pathname.substring(1); // Remove leading '/'
-  } else {
-    // Handle plain object key
-    objectKey = s3Url;
+  constructor() {
+    this.client = new S3Client({
+      region: process.env.AWS_REGION!,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+      },
+    });
   }
 
-  const command = new GetObjectCommand({ Bucket: bucketName, Key: objectKey });
-  try {
-    return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-  } catch (error) {
-    console.error("Error generating presigned URL:", error);
-    return null;
+  async getSignedS3Url(s3Url: string) {
+    if (!s3Url) return null;
+    let bucketName = process.env.AWS_BUCKET_NAME!;
+    let objectKey = "";
+
+    // Handle different URL formats
+    if (s3Url.startsWith("s3://")) {
+      const bucketAndKey = s3Url.substring(5); // Remove 's3://'
+      const [bucket, ...keyParts] = bucketAndKey.split("/");
+      bucketName = bucket;
+      objectKey = keyParts.join("/");
+    } else if (s3Url.startsWith("https://")) {
+      // Handle full HTTPS URL
+      const url = new URL(s3Url);
+      bucketName = url.hostname.split(".")[0];
+      objectKey = url.pathname.substring(1); // Remove leading '/'
+    } else {
+      // Handle plain object key
+      objectKey = s3Url;
+    }
+
+    const command = new GetObjectCommand({
+      Bucket: bucketName,
+      Key: objectKey,
+    });
+    try {
+      return await getSignedUrl(this.client, command, { expiresIn: 3600 });
+    } catch (error) {
+      console.error("Error generating presigned URL:", error);
+      return null;
+    }
   }
-};
+
+  async upload(filename: string, fileBlob: Blob, bucket_endpoint: string) {
+    try {
+      const upload = new Upload({
+        client: this.client,
+        params: {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: `${bucket_endpoint}${filename}`,
+          Body: fileBlob,
+        },
+      });
+      return await upload.done().then((output) => {
+        return output.Location || "";
+      });
+    } catch (error) {
+      console.error("Error during upload:", error);
+      return null;
+    }
+  }
+}
