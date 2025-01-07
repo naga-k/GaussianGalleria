@@ -73,20 +73,6 @@ npx drizzle-kit migrate
    - Use the SQL script located at `script/insertSplat.sql`
    - Execute the script against your Postgres database in NeonDB
 
-### Alternative: Local JSON Data
-
-You can alternatively add items directly to `public/splatData.json`:
-```json
-{
-  "items": [
-    {
-      "src": "s3://your-bucket/path",
-      "splatSrc": "s3://your-bucket/splat-path"
-    }
-  ]
-}
-```
-
 ## Technical Stack
 
 ### Viewer Technology
