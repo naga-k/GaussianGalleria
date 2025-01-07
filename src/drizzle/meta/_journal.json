@@ -8,6 +8,20 @@
       "when": 1730070856162,
       "tag": "0000_hesitant_wilson_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1736248738605,
+      "tag": "0001_gorgeous_masked_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1736249265234,
+      "tag": "0002_mighty_jackpot",
+      "breakpoints": true
     }
   ]
 }
