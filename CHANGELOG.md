@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Old documentation from README
 
+### Added
+- Added Galleries for splats
+
+### Changed
+- Replaced splats splats view on the homepage with gallery view
+
 ## [0.1.0] - 2024-12-29
 
 ### Added
