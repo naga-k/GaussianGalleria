@@ -1,10 +1,10 @@
 // src/app/gallery/[id]/page.tsx
 "use client";
 import { useEffect, useState } from "react";
-import VideoCard from "../../components/VideoCard";
-import VideoItem from "../../lib/definitions/VideoItem";
+import VideoCard from "../../../components/VideoCard";
+import VideoItem from "../../../lib/definitions/VideoItem";
 import { useRouter } from "next/navigation";
-import LoadSpinner from "../../components/LoadSpinner";
+import LoadSpinner from "../../../components/LoadSpinner";
 
 interface GalleryDetails {
   name: string;
