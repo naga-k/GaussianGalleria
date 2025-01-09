@@ -1,6 +1,6 @@
 // src/app/components/VideoItem.tsx
 import React, { useRef, useState, useEffect } from 'react';
-import VideoItem from '../models/VideoItem';
+import VideoItem from '../lib/definitions/VideoItem';
 
 interface VideoItemProps {
   item: VideoItem;

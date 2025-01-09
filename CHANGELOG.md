@@ -6,14 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Removed
-- Old documentation from README
 
 ### Added
 - Added Galleries for splats
+- Added Admin Dashboard to add splats directly to the DB and manage galleries
 
 ### Changed
 - Replaced splats splats view on the homepage with gallery view
+
+### Removed
+- Old documentation from README
 
 ## [0.1.0] - 2024-12-29
 

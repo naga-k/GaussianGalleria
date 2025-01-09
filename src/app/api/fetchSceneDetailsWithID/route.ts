@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "../../lib/db/db";
 import { splats } from "../../lib/db/schema";
 import { eq } from "drizzle-orm";
-import SceneItem from "../../models/SceneItem";
+import SceneItem from "../../lib/definitions/SceneItem";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

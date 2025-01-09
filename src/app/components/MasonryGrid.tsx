@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import GalleryCard from "./GalleryCard";
+import LoadSpinner from "./LoadSpinner";
 
 interface GalleryItem {
   id: number;
@@ -41,9 +42,11 @@ export default function MasonryGrid() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
+      <>
+        <div className="flex items-center justify-center min-h-screen">
+          <LoadSpinner />
+        </div>
+      </>
     );
   }
 
