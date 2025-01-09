@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import VideoCard from "../../components/VideoCard";
 import VideoItem from "../../lib/definitions/VideoItem";
 import { useRouter } from "next/navigation";
+import LoadSpinner from "../../components/LoadSpinner";
 
 interface GalleryDetails {
   name: string;
@@ -104,7 +105,7 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+        <LoadSpinner />
       </div>
     );
   }
