@@ -8,15 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added Galleries for splats
-- Added Admin Dashboard to add splats directly to the DB and manage galleries
+- Galleries for splats
+-  Admin Dashboard to add splats directly to the DB and manage galleries
 
 ### Changed
 - Change project name to GaussianGalleria with the description
 - Replaced splats splats view on the homepage with gallery view
+- Updated Next.js to version 14.2.23
 
 ### Removed
 - Old documentation from README
+- Dark mode discarded
 
 ## [0.1.0] - 2024-12-29
 
