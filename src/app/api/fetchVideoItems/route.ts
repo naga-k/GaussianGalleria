@@ -10,6 +10,7 @@ export const revalidate = 0;
 
 interface VideoQueryResult {
   id: number;
+  name: string | null;
   video: string | null;
   splat: string | null;
 }
@@ -19,6 +20,7 @@ export async function GET() {
     const combinedData: VideoItem[] = await db
       .select({
         id: splats.id,
+        name: splats.name,
         video: splats.video,
         splat: splats.splat,
       })
@@ -26,6 +28,7 @@ export async function GET() {
       .then((data) => {
         return data.map((item: VideoQueryResult) => ({
           id: item.id,
+          name: item.name || "",
           src: item.video || "",
           splatUrl: item.splat || "",
         }));
