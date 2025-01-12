@@ -1,12 +1,12 @@
-# 3D Portfolio
+# GaussianGalleria
 
-A Next.js-based portfolio website for showcasing interactive 3D scenes using Splat visualization technology.
+A Next.js-based portfolio website for showcasing interactive 3D scenes using [Gaussian Splatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) and web viewers.
 
 Demo: [Hosted on Vercel](https://3-d-portfolio-tau-three.vercel.app)
 
 ## Overview
 
-This portfolio website features:
+This Gallery website features:
 - Grid-based homepage displaying 3D scenes
 - Interactive viewer for each scene using Splat technology
 - Integration with NeonDB for data storage
