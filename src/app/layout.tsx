@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "3D Portfolio",
-  description: "A 3D portfolio showcasing my work",
+  title: "GaussianGalleria",
+  description: "3D Scenes Generated using Gaussian Splatting",
 };
 
 export default function RootLayout({
