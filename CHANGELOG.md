@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Admin Dashboard to add splats directly to the DB and manage galleries
 
 ### Changed
+- Change project name to GaussianGalleria with the description
 - Replaced splats splats view on the homepage with gallery view
 
 ### Removed
