@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change project name to GaussianGalleria with the description
 - Replaced splats splats view on the homepage with gallery view
+- Updated Next.js to version 14.2.23
 
 ### Removed
 - Old documentation from README
