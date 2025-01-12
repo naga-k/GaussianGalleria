@@ -10,8 +10,8 @@ import React, { useState, useEffect } from "react";
 interface SplatItem {
   id: number;
   name: string;
-  src: string;
-  splatUrl: string;
+  // src: string;
+  // splatUrl: string;
 }
 
 export default function DashBoard() {
@@ -92,17 +92,17 @@ function SplatList({ splats }: { splats: SplatItem[] }) {
           <tr className="bg-gray-200">
             <th className="p-2">ID</th>
             <th className="p-2">Name</th>
-            <th className="p-2">Source</th>
-            <th className="p-2">Splat URL</th>
+
+            
           </tr>
         </thead>
         <tbody>
-          {splats.map(({ id, name, src, splatUrl }) => (
+          {splats.map(({ id, name }) => (
             <tr key={id} className="border-b">
               <td className="p-2">{id}</td>
               <td className="p-2">{name}</td>
-              <td className="p-2">{src}</td>
-              <td className="p-2">{splatUrl}</td>
+              
+              
             </tr>
           ))}
         </tbody>
