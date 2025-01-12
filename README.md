@@ -7,7 +7,7 @@ Demo: [Hosted on Vercel](https://3-d-portfolio-tau-three.vercel.app)
 ## Overview
 
 This Gallery website features:
-- Grid-based homepage displaying 3D scenes
+- Grid-based pages displaying 3D scenes
 - Interactive viewer for each scene using Splat technology
 - Integration with NeonDB for data storage
 - S3 storage for 3D assets
