@@ -15,6 +15,7 @@ export const galleries = pgTable('galleries', {
     id: serial('id').primaryKey(),
     name: text('name').notNull(),
     description: text('description'),
+    thumbnailUrl: text('thumbnailUrl'),
     createdAt: timestamp('createdAt').defaultNow(),
     updatedAt: timestamp('updatedAt')
 });

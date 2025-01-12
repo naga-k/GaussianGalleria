@@ -4,12 +4,9 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import GalleryCard from "./GalleryCard";
 import LoadSpinner from "./LoadSpinner";
+import GalleryItem from "../lib/definitions/GalleryItem";
 
-interface GalleryItem {
-  id: number;
-  name: string;
-  description: string | null;
-}
+
 
 export default function MasonryGrid() {
   const [galleries, setGalleries] = useState<GalleryItem[]>([]);

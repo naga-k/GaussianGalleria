@@ -22,6 +22,13 @@
       "when": 1736249265234,
       "tag": "0002_mighty_jackpot",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1736695927282,
+      "tag": "0003_messy_mandarin",
+      "breakpoints": true
     }
   ]
 }
