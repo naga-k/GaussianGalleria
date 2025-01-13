@@ -53,7 +53,7 @@ function DashboardContainer() {
     <>
       <header className="w-screen p-4 flex flex-row justify-between items-center">
         <div className="mx-2 p-2 font-bold text-lg hover:text-teal-400">
-          <p>DiffStudio Dashboard</p>
+          <p>GaussianGallery Dashboard</p>
         </div>
 
         <ul className="flex flex-row justify-between list-none">

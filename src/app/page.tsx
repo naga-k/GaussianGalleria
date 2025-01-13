@@ -19,7 +19,7 @@ export default function Home() {
                   transform hover:scale-105 
                   transition-transform duration-500"
           >
-            DiffStudio.Gallery
+            Gaussian.Gallery
           </h1>
         </div>
         <AuthContainer fallback={null}>
