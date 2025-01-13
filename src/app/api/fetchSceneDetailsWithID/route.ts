@@ -9,13 +9,6 @@ export const revalidate = 0;
 
 // app/api/fetchSceneDetailsWithID/route.ts
 
-interface SceneQueryResult {
-  id: number;
-  name: string | null;
-  description: string | null;
-  splat: string | null;
-}
-
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -31,16 +24,18 @@ export async function GET(request: Request) {
         id: splats.id,
         name: splats.name,
         description: splats.description,
-        splat: splats.splat,
+        splatUrl: splats.splat,
+        videoUrl: splats.video
       })
       .from(splats)
       .where(eq(splats.id, id))
-      .then((data: SceneQueryResult[]) => {
-        return data.map((item: SceneQueryResult) => ({
+      .then((data: SceneItem[]) => {
+        return data.map((item: SceneItem) => ({
           id: item.id,
           name: item.name || "Untitled",
           description: item.description || "No description available",
-          splatUrl: item.splat || "",
+          splatUrl: item.splatUrl || "",
+          videoUrl: item.videoUrl || ""
         }));
       });
 

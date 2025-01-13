@@ -1,5 +1,4 @@
 'use client';
-
 interface SplatRowActionsProps {
   id: number;
 }
@@ -17,12 +16,11 @@ const SplatRowActions = ({ id }: SplatRowActionsProps) => {
 
   const handleViewSplat = () => {
     // TODO: Navigate to splat view
-    console.log('View splat:', id);
+    window.open(`/viewer?id=${id}`, '_blank');
   };
 
   const handleViewVideo = () => {
-    // TODO: Navigate to video view
-    console.log('View video:', id);
+    window.open(`/admin/dashboard/videoPreview?id=${id}`, '_blank');
   };
 
   return (
@@ -31,7 +29,7 @@ const SplatRowActions = ({ id }: SplatRowActionsProps) => {
         onClick={handleEdit}
         className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
       >
-        Edit
+        Edit Details
       </button>
       <button
         onClick={handleDelete}
