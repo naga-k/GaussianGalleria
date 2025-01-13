@@ -66,7 +66,7 @@ export default function SplatUploadForm({
       return (
         <>
           <div className="p-8 flex flex-col items-center justify-center">
-            <h3 className="text-base font-semibold">
+            <h3 className="text-base font-semibold text-teal-500">
               Splat has been uploaded!
             </h3>
             <button
@@ -90,7 +90,7 @@ export default function SplatUploadForm({
           </h3>
 
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
+            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded text-white"
             type="text"
             name="name"
             required
@@ -98,15 +98,15 @@ export default function SplatUploadForm({
           />
 
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
+            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded text-white"
             type="textarea"
             name="description"
             placeholder="Describe your Splat"
           />
 
-          <label htmlFor="splatFile">Choose Splat File: </label>
+          <label htmlFor="splatFile" className="text-teal-400">Choose Splat File: </label>
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
+            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded text-white"
             type="file"
             id="splatFile"
             name="splatFile"
@@ -114,9 +114,9 @@ export default function SplatUploadForm({
             required
           />
 
-          <label htmlFor="videoFile">Choose Video File: </label>
+          <label htmlFor="videoFile" className="text-teal-400">Choose Video File: </label>
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
+            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded text-white"
             type="file"
             id="videoFile"
             name="videoFile"
