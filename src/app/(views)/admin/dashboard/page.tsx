@@ -1,4 +1,4 @@
-// app/admin/dahsboard/page.tsx
+// src/app/admin/dahsboard/page.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -6,6 +6,7 @@ import AuthContainer from "../components/AuthContainer";
 import ModalContainer from "@/src/app/components/ModalContainer";
 import SplatUploadForm from "./components/SplatUploadForm";
 import React, { useState, useEffect } from "react";
+import SplatRowActions from "./components/SplatRowActions";
 
 interface SplatItem {
   id: number;
@@ -92,8 +93,7 @@ function SplatList({ splats }: { splats: SplatItem[] }) {
           <tr className="bg-gray-200">
             <th className="p-2">ID</th>
             <th className="p-2">Name</th>
-
-            
+            <th className="p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -101,8 +101,9 @@ function SplatList({ splats }: { splats: SplatItem[] }) {
             <tr key={id} className="border-b">
               <td className="p-2">{id}</td>
               <td className="p-2">{name}</td>
-              
-              
+              <td className="p-2">
+                <SplatRowActions id={id} />
+              </td>
             </tr>
           ))}
         </tbody>
