@@ -58,7 +58,10 @@ function DashboardContainer() {
 
         <ul className="flex flex-row justify-between list-none">
           <li className="mx-2 p-2 cursor-pointer hover:text-teal-400">
-            <a onClick={() => {router.push("/");}}>Gallery</a>
+            <a onClick={() => {router.push("/");}}>Galleries</a>
+          </li>
+          <li className="mx-2 p-2 cursor-pointer hover:text-teal-400">
+            <a onClick={() => {router.push("/");}}>Manage Galleries</a>
           </li>
           <li className="mx-2 p-2 cursor-pointer hover:text-red-400">
             <a onClick={handleLogout}>Log Out</a>

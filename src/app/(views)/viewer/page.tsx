@@ -77,7 +77,7 @@ const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
   };
 
   const handleClose = () => {
-    router.push("/");
+    router.back();
   };
 
   if (loading) {
