@@ -9,9 +9,13 @@
 
 
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply text-gray-900 bg-gray-50 dark:bg-gray-900 dark:text-gray-100;
+  }
 }
 
 @layer utilities {
