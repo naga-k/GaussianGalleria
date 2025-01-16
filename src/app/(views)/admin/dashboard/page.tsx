@@ -96,14 +96,16 @@ function DashboardContainer() {
       </header>
 
       <div className="w-screen flex flex-column items-center justify-end">
-        <button
-          onClick={() => {
-            setOpened(true);
-          }}
-          className="w-fit h-fit m-8 px-4 py-2 bg-teal-800 hover:bg-teal-600 font-bold rounded"
-        >
-          + Upload
-        </button>
+        <div className="w-fit h-fit px-8 mx-2">
+          <button
+            onClick={() => {
+              setOpened(true);
+            }}
+            className="default-button"
+          >
+            + Upload
+          </button>
+        </div>
       </div>
 
       {isLoading ? (

@@ -90,7 +90,7 @@ export default function SplatUploadForm({
           </h3>
 
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded text-white"
+            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
             type="text"
             name="name"
             required
@@ -98,7 +98,7 @@ export default function SplatUploadForm({
           />
 
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded text-white"
+            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
             type="textarea"
             name="description"
             placeholder="Describe your Splat"
@@ -106,7 +106,7 @@ export default function SplatUploadForm({
 
           <label htmlFor="splatFile" className="text-teal-400">Choose Splat File: </label>
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded text-white"
+            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
             type="file"
             id="splatFile"
             name="splatFile"
@@ -116,7 +116,7 @@ export default function SplatUploadForm({
 
           <label htmlFor="videoFile" className="text-teal-400">Choose Video File: </label>
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded text-white"
+            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
             type="file"
             id="videoFile"
             name="videoFile"
@@ -126,7 +126,7 @@ export default function SplatUploadForm({
 
           <button
             type="submit"
-            className="w-fit h-fit m-8 px-4 py-2 bg-teal-800 hover:bg-teal-600 font-bold rounded"
+            className="default-button m-4"
           >
             Upload to S3
           </button>

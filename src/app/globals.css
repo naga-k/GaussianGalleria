@@ -2,19 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer base {
+  :root {
+    --background: 240 253 250;
+    --foreground: 15 23 42;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: 15 23 42;
+      --foreground: 240 253 250;
+    }
+  }
+
   body {
-    @apply text-gray-900 bg-gray-50 dark:bg-gray-900 dark:text-gray-100;
+    @apply text-foreground bg-background;
+  }
+
+  .default-button {
+    @apply px-4 py-2 bg-teal-800 hover:bg-teal-600 font-bold text-white rounded-full
   }
 }
 

@@ -10,12 +10,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "rgb(var(--background))",
+        foreground: "rgb(var(--foreground))",
       },
     },
   },
-  darkMode: 'class',
   plugins: [],
 };
 export default config;

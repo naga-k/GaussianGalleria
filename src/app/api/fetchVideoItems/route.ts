@@ -26,12 +26,14 @@ export async function GET() {
       })
       .from(splats)
       .then((data) => {
-        return data.map((item: VideoQueryResult) => ({
-          id: item.id,
-          name: item.name || "",
-          src: item.video || "",
-          splatUrl: item.splat || "",
-        }));
+        return data
+          .map((item: VideoQueryResult) => ({
+            id: item.id,
+            name: item.name || "",
+            src: item.video || "",
+            splatUrl: item.splat || "",
+          }))
+          .sort((a, b) => a.id - b.id);
       });
 
     return NextResponse.json(combinedData, {
