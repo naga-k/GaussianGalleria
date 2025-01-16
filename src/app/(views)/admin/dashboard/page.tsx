@@ -65,7 +65,7 @@ function DashboardContainer() {
 
   return (
     <>
-      <header className="w-screen p-4 flex flex-row justify-between items-center">
+      <header className="min-w-screen p-4 flex flex-row justify-between items-center">
         <div className="mx-2 p-2 font-bold text-lg hover:text-teal-400">
           <p>GaussianGallery Dashboard</p>
         </div>
@@ -95,8 +95,8 @@ function DashboardContainer() {
         </ul>
       </header>
 
-      <div className="w-screen flex flex-column items-center justify-end">
-        <div className="w-fit h-fit px-8 mx-2">
+      <div className="min-w-screen flex flex-column px-4 items-center justify-end">
+        <div className="w-fit h-fit">
           <button
             onClick={() => {
               setOpened(true);

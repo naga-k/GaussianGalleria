@@ -10,13 +10,13 @@ export default function TableViewer<T extends TableItem>({
   values,
 }: TableViewerProps<T extends TableItem ? TableItem : unknown>) {
   return (
-    <div className="px-8">
-      <table className="w-full mt-4">
+    <div className="m-4 border border-b border-slate-600 rounded-lg">
+      <table className="w-full">
         <thead>
-          <tr className="border-b">
+          <tr className="border-b border-slate-600">
             {headers.map((header, index) => {
               return (
-                <th key={index} className="p-2 text-start">
+                <th key={index} className="px-4 py-2 text-start">
                   {header}
                 </th>
               );
@@ -25,10 +25,10 @@ export default function TableViewer<T extends TableItem>({
         </thead>
         <tbody>
           {values.map((value, index) => (
-            <tr key={index} className="border-b">
+            <tr key={index} className="border-b border-slate-600">
               {Object.keys(value).map((key) => {
                 return (
-                  <td key={key} className="p-2">
+                  <td key={key} className="px-4 py-2 text-start">
                     {value[key]}
                   </td>
                 );
@@ -37,6 +37,9 @@ export default function TableViewer<T extends TableItem>({
           ))}
         </tbody>
       </table>
+      <div className="w-full px-4 py-8">
+        {/* TODO: Pagination Support */}
+      </div>
     </div>
   );
 }
