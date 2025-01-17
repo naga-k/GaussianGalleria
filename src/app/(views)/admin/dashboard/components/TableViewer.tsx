@@ -1,4 +1,6 @@
-type TableItem = { [index: string]: string | number };
+import { ReactNode } from "react";
+
+type TableItem = { [index: string]: string | number | ReactNode };
 
 interface TableViewerProps<T extends TableItem> {
   headers: string[];

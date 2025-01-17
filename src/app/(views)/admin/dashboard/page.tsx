@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import AuthContainer from "../components/AuthContainer";
 import ModalContainer from "@/src/app/components/ModalContainer";
 import SplatUploadForm from "./components/SplatUploadForm";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import TableViewer from "./components/TableViewer";
 import VideoItem from "@/src/app/lib/definitions/VideoItem";
 import LoadSpinner from "@/src/app/components/LoadSpinner";
@@ -14,6 +14,7 @@ import SplatRowActions from "./components/SplatRowActions";
 type SplatItem = {
   id: number;
   name: string;
+  actions: ReactNode;
 };
 
 export default function DashBoard() {
@@ -56,7 +57,15 @@ function DashboardContainer() {
       .then((data: VideoItem[]) => {
         setSplats(
           data.map((videoItem: VideoItem) => {
-            return { id: videoItem.id, name: videoItem.name };
+            return {
+              id: videoItem.id,
+              name: videoItem.name,
+              actions: (
+                <>
+                  <SplatRowActions id={videoItem.id} />
+                </>
+              ),
+            };
           })
         );
       })
@@ -112,39 +121,16 @@ function DashboardContainer() {
       {isLoading ? (
         <LoadSpinner />
       ) : (
-        <TableViewer headers={["ID", "Name"]} values={splats} />
+        <TableViewer headers={["ID", "Name", "Actions"]} values={splats} />
       )}
 
-      <ModalContainer title="Upload Splat" isOpened={isOpened} onClose={onModalClose}>
+      <ModalContainer
+        title="Upload Splat"
+        isOpened={isOpened}
+        onClose={onModalClose}
+      >
         <SplatUploadForm onUploadCallback={onModalClose} />
       </ModalContainer>
     </>
-  );
-}
-
-function SplatList({ splats }: { splats: SplatItem[] }) {
-  return (
-    <div className="px-8">
-      <table className="w-full mt-4">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="p-2">ID</th>
-            <th className="p-2">Name</th>
-            <th className="p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {splats.map(({ id, name }) => (
-            <tr key={id} className="border-b">
-              <td className="p-2">{id}</td>
-              <td className="p-2">{name}</td>
-              <td className="p-2">
-                <SplatRowActions id={id} />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
   );
 }
