@@ -114,7 +114,7 @@ function DashboardContainer() {
         <TableViewer headers={["ID", "Name"]} values={splats} />
       )}
 
-      <ModalContainer isOpened={isOpened} onClose={onModalClose}>
+      <ModalContainer title="Upload Splat" isOpened={isOpened} onClose={onModalClose}>
         <SplatUploadForm onUploadCallback={onModalClose} />
       </ModalContainer>
     </>

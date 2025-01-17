@@ -98,6 +98,19 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
     }
   };
 
+  const BackDiv = () => {
+    return (
+      <>
+        <div
+          className="mt-8 hover:text-teal-600 hover:cursor-pointer"
+          onClick={() => router.push("/")}
+        >
+          <p>&#8592; Back to Gallery</p>
+        </div>
+      </>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -112,7 +125,10 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
 
   if (!splats.length) {
     return (
-      <div className="text-center p-4">No splats found in this gallery</div>
+      <div className="m-8 flex flex-col">
+        <BackDiv />
+        <div className="text-center">No splats found in this gallery.</div>
+      </div>
     );
   }
 
@@ -124,7 +140,8 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
       />
 
       <div className="relative w-full px-4 sm:px-6 lg:px-8">
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 py-10 md:py-20 [&>div]:mb-4">
+        <BackDiv />
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 py-10 [&>div]:mb-4">
           {splats.map((splat) => (
             <VideoCard
               key={splat.id}

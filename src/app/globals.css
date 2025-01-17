@@ -24,7 +24,7 @@ body {
   }
 
   .default-button {
-    @apply px-4 py-2 bg-teal-800 hover:bg-teal-600 font-bold text-white rounded-full
+    @apply px-4 py-2 bg-teal-600 hover:bg-teal-500 font-bold text-white rounded-full
   }
 }
 

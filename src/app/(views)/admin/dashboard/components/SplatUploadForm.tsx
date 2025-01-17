@@ -1,4 +1,3 @@
-// import SplatUploadPayload from "@/src/app/lib/definitions/SplatUploadPayload";
 import LoadSpinner from "@/src/app/components/LoadSpinner";
 import { FormEvent, useState } from "react";
 
@@ -69,10 +68,7 @@ export default function SplatUploadForm({
             <h3 className="text-base font-semibold text-teal-500">
               Splat has been uploaded!
             </h3>
-            <button
-              onClick={onUploadCallback}
-              className="w-fit h-fit m-8 px-4 py-2 bg-teal-800 hover:bg-teal-600 font-bold rounded"
-            >
+            <button onClick={onUploadCallback} className="default-button mt-4">
               Close
             </button>
           </div>
@@ -82,15 +78,11 @@ export default function SplatUploadForm({
     return (
       <>
         <form
-          className="flex flex-col items-center justify-center"
+          className="flex flex-col items-start justify-start py-4"
           onSubmit={handleURLSubmit}
         >
-          <h3 className="text-base font-semibold text-teal-500">
-            Upload Splat
-          </h3>
-
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
+            className="w-full my-2 px-4 py-2 bg-inherit border border-slate-400 rounded"
             type="text"
             name="name"
             required
@@ -98,15 +90,17 @@ export default function SplatUploadForm({
           />
 
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
+            className="w-full my-2 px-4 py-2 bg-inherit border border-slate-400 rounded"
             type="textarea"
             name="description"
             placeholder="Describe your Splat"
           />
 
-          <label htmlFor="splatFile" className="text-teal-400">Choose Splat File: </label>
+          <label htmlFor="splatFile" className="mt-2 text-teal-400">
+            Choose Splat File
+          </label>
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
+            className="w-fit my-2 py-2"
             type="file"
             id="splatFile"
             name="splatFile"
@@ -114,22 +108,22 @@ export default function SplatUploadForm({
             required
           />
 
-          <label htmlFor="videoFile" className="text-teal-400">Choose Video File: </label>
+          <label htmlFor="videoFile" className="mt-2 text-teal-400">
+            Choose Video File
+          </label>
           <input
-            className="w-auto m-4 px-4 py-2 bg-inherit border-2 rounded"
+            className="w-fit my-2 py-2"
             type="file"
             id="videoFile"
             name="videoFile"
             accept="video/*"
             required
           />
-
-          <button
-            type="submit"
-            className="default-button m-4"
-          >
-            Upload to S3
-          </button>
+          <div className="flex w-full mt-4 px-4 justify-center">
+            <button type="submit" className="default-button">
+              Upload to S3
+            </button>
+          </div>
         </form>
       </>
     );
