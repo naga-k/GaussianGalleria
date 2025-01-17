@@ -5,6 +5,7 @@ import VideoCard from "../../../components/VideoCard";
 import VideoItem from "../../../lib/definitions/VideoItem";
 import { useRouter } from "next/navigation";
 import LoadSpinner from "../../../components/LoadSpinner";
+import Header from "@/src/app/components/Header";
 
 interface GalleryDetails {
   name: string;
@@ -53,7 +54,6 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
       }
 
       const data = await response.json();
-      console.log("Received data:", data);
 
       if (!Array.isArray(data)) {
         throw new Error("Data is not an array");
@@ -74,9 +74,6 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
       // Create URL mapping
       const urlMap = new Map(urlsToSign.map((url, i) => [url, signedUrls[i]]));
 
-      console.log("Url Maps below");
-      console.log(urlMap);
-
       // Update items with signed URLs
       const signedSplats = data.map((item) => ({
         ...item,
@@ -85,7 +82,6 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
 
       setSplats(signedSplats);
     } catch (err) {
-      console.error("Fetch error:", err);
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
@@ -102,6 +98,19 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
     }
   };
 
+  const BackDiv = () => {
+    return (
+      <>
+        <div
+          className="mt-8 hover:text-teal-600 hover:cursor-pointer"
+          onClick={() => router.push("/")}
+        >
+          <p>&#8592; Back to Gallery</p>
+        </div>
+      </>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -116,41 +125,23 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
 
   if (!splats.length) {
     return (
-      <div className="text-center p-4">No splats found in this gallery</div>
+      <div className="m-8 flex flex-col">
+        <BackDiv />
+        <div className="text-center">No splats found in this gallery.</div>
+      </div>
     );
   }
 
-  console.log("Splats");
-  console.log(splats);
-
   return (
     <div className="overflow-y-auto scrollbar-hide">
-      <header className="bg-gradient-to-r from-gray-900 to-black text-white py-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1
-            className="text-4xl sm:text-5xl md:text-6xl font-semibold text-center text-white 
-                  hover:text-teal-400 
-                  transition-colors duration-300 
-                  shadow-lg 
-                  transform hover:scale-105 
-                  transition-transform duration-500"
-          >
-            {galleryDetails?.name || "Loading..."}
-          </h1>
-          {galleryDetails?.description && (
-            <p
-              className="mt-4 text-xl text-center text-gray-300 
-                       hover:text-teal-300 
-                       transition-colors duration-300"
-            >
-              {galleryDetails.description}
-            </p>
-          )}
-        </div>
-      </header>
+      <Header
+        title={galleryDetails?.name || "Loading..."}
+        subtitle={galleryDetails?.description || null}
+      />
 
       <div className="relative w-full px-4 sm:px-6 lg:px-8">
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 py-10 md:py-20 [&>div]:mb-4">
+        <BackDiv />
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 py-10 [&>div]:mb-4">
           {splats.map((splat) => (
             <VideoCard
               key={splat.id}
