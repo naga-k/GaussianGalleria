@@ -25,6 +25,7 @@ export async function GET() {
         splat: splats.splat,
       })
       .from(splats)
+      .orderBy(splats.id)
       .then((data) => {
         return data
           .map((item: VideoQueryResult) => ({

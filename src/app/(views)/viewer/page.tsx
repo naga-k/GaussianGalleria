@@ -72,7 +72,8 @@ const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
       id: item.id,
       name: item.name,
       description: item.description,
-      splatUrl: signedUrls[0], // Get the first (and only) signed URL
+      splatUrl: signedUrls[0],
+      videoUrl: item.videoUrl
     };
   };
 

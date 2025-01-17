@@ -1,4 +1,4 @@
-// app/admin/dahsboard/page.tsx
+// src/app/admin/dahsboard/page.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 import TableViewer from "./components/TableViewer";
 import VideoItem from "@/src/app/lib/definitions/VideoItem";
 import LoadSpinner from "@/src/app/components/LoadSpinner";
+import SplatRowActions from "./components/SplatRowActions";
 
 type SplatItem = {
   id: number;
@@ -118,5 +119,32 @@ function DashboardContainer() {
         <SplatUploadForm onUploadCallback={onModalClose} />
       </ModalContainer>
     </>
+  );
+}
+
+function SplatList({ splats }: { splats: SplatItem[] }) {
+  return (
+    <div className="px-8">
+      <table className="w-full mt-4">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="p-2">ID</th>
+            <th className="p-2">Name</th>
+            <th className="p-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {splats.map(({ id, name }) => (
+            <tr key={id} className="border-b">
+              <td className="p-2">{id}</td>
+              <td className="p-2">{name}</td>
+              <td className="p-2">
+                <SplatRowActions id={id} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
