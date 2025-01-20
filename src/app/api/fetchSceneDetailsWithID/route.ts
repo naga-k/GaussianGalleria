@@ -32,8 +32,8 @@ export async function GET(request: Request) {
       .then((data: SceneItem[]) => {
         return data.map((item: SceneItem) => ({
           id: item.id,
-          name: item.name || "Untitled",
-          description: item.description || "No description available",
+          name: item.name || "",
+          description: item.description || "",
           splatUrl: item.splatUrl || "",
           videoUrl: item.videoUrl || ""
         }));

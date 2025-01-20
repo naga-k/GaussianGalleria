@@ -2,13 +2,9 @@ import AuthHandler from "@/src/app/lib/auth/authHandler";
 import S3Handler from "@/src/app/lib/cloud/s3";
 import { db } from "@/src/app/lib/db/db";
 import { splats } from "@/src/app/lib/db/schema";
-import SplatUploadPayload from "@/src/app/lib/definitions/SplatUploadPayload";
+import { SplatUploadPayload } from "@/src/app/lib/definitions/SplatPayload";
 import { NextResponse } from "next/server";
-
-const S3_BUCKET_ENDPOINTS = {
-  splat: process.env.AWS_BUCKET_SPLAT_ENDPOINT || null,
-  video: process.env.AWS_BUCKET_VIDEO_ENDPOINT || null,
-};
+import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/config";
 
 export async function POST(request: Request) {
   const authHandler = new AuthHandler();

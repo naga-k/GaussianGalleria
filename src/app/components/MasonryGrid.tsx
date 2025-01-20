@@ -6,8 +6,6 @@ import GalleryCard from "./GalleryCard";
 import LoadSpinner from "./LoadSpinner";
 import GalleryItem from "../lib/definitions/GalleryItem";
 
-
-
 export default function MasonryGrid() {
   const [galleries, setGalleries] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);

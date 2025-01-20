@@ -1,12 +1,13 @@
 'use client';
 interface SplatRowActionsProps {
   id: number;
+  editCallback: (id: number) => void;
 }
 
-const SplatRowActions = ({ id }: SplatRowActionsProps) => {
+const SplatRowActions = ({ id, editCallback }: SplatRowActionsProps) => {
   const handleEdit = async () => {
     // TODO: API call to edit
-    console.log('Edit splat:', id);
+    editCallback(id);
   };
 
   const handleDelete = async () => {
