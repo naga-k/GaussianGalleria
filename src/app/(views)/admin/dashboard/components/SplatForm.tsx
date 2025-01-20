@@ -17,24 +17,30 @@ export default function SplatUploadForm({
   return (
     <>
       <form
-        className="flex flex-col items-start justify-start py-4"
+        className="p-8 w-full flex flex-col items-start justify-start"
         onSubmit={onSubmitCallback}
       >
+        <label htmlFor="splatFile" className="mt-2 text-teal-400">
+          Name
+        </label>
         <input
           className="w-full my-2 px-4 py-2 bg-inherit border border-slate-400 rounded"
           type="text"
           name="name"
           defaultValue={initialData ? initialData.name : undefined}
           required
-          placeholder="Name"
+          placeholder="Enter Name..."
         />
 
+        <label htmlFor="splatFile" className="mt-2 text-teal-400">
+          Description
+        </label>
         <input
           className="w-full my-2 px-4 py-2 bg-inherit border border-slate-400 rounded"
           type="textarea"
           name="description"
           defaultValue={initialData?.description}
-          placeholder="Describe your Splat"
+          placeholder="Describe your Splat..."
         />
 
         <label htmlFor="splatFile" className="mt-2 text-teal-400">
@@ -60,7 +66,7 @@ export default function SplatUploadForm({
           accept="video/*"
           required={initialData ? false : true}
         />
-        <div className="flex w-full mt-4 px-4 justify-center">
+        <div className="w-full flex mt-4 justify-end">
           <button type="submit" className="default-button">
             {submitBtnLabel}
           </button>

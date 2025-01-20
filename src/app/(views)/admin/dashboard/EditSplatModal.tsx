@@ -14,7 +14,7 @@ interface EditModalProps {
 
 export default function EditSplatModal({ splatData }: EditModalProps) {
   const [isLoading, setLoading] = useState(false);
-  const [isUploaded, setUploaded] = useState(false);
+  const [isEdited, setEdited] = useState(false);
 
   const handleEditSplat = async (splatPayload: FormData) => {
     const response = await fetch("/api/admin/editSplatById", {
@@ -23,7 +23,7 @@ export default function EditSplatModal({ splatData }: EditModalProps) {
     });
     if (!response.ok) {
       const payload = await response.json();
-      console.log(payload["error"]);
+      throw new Error(payload["error"]);
     }
     return response.ok;
   };
@@ -46,7 +46,7 @@ export default function EditSplatModal({ splatData }: EditModalProps) {
 
       const result = await handleEditSplat(formData);
       if (result) {
-        setUploaded(true);
+        setEdited(true);
         console.log("Splat Edit successful!");
       } else {
         console.error("Splat Edit unsuccessful.");
@@ -61,7 +61,7 @@ export default function EditSplatModal({ splatData }: EditModalProps) {
   if (isLoading) {
     return <LoadSpinner />;
   } else {
-    if (isUploaded) {
+    if (isEdited) {
       return (
         <>
           <div className="p-8 flex flex-col items-center justify-center">

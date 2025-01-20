@@ -13,7 +13,7 @@ export default function UploadSplatModal() {
     });
     if (!response.ok) {
       const payload = await response.json();
-      console.log(payload["error"]);
+      throw new Error(payload["error"]);
     }
     return response.ok;
   };
@@ -44,8 +44,6 @@ export default function UploadSplatModal() {
       if (result) {
         setUploaded(true);
         console.log("Splat upload successful!");
-      } else {
-        console.error("Splat upload unsuccessful.");
       }
     } catch (error) {
       console.error(`Upload Error: ${error}`);
