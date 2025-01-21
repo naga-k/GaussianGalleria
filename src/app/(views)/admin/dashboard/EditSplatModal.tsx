@@ -10,9 +10,13 @@ type SplatPrefillData = {
 
 interface EditModalProps {
   splatData: SplatPrefillData;
+  onSuccess: () => void;
 }
 
-export default function EditSplatModal({ splatData }: EditModalProps) {
+export default function EditSplatModal({
+  splatData,
+  onSuccess,
+}: EditModalProps) {
   const [isLoading, setLoading] = useState(false);
   const [isEdited, setEdited] = useState(false);
 
@@ -36,20 +40,17 @@ export default function EditSplatModal({ splatData }: EditModalProps) {
       const formData = new FormData(formEvent.currentTarget);
       const splatName = formData.get("name");
 
-      if (!splatName || splatName.toString().length == 0) {
+      if (!splatName || splatName.toString().trim().length == 0) {
         throw new Error("Splat Name not provided.");
       }
 
       formData.append("id", splatData.id.toString());
 
-      console.log(formData.values().toArray());
-
       const result = await handleEditSplat(formData);
       if (result) {
         setEdited(true);
+        onSuccess();
         console.log("Splat Edit successful!");
-      } else {
-        console.error("Splat Edit unsuccessful.");
       }
     } catch (error) {
       console.error(`Edit Error: ${error}`);

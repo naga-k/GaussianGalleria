@@ -7,15 +7,15 @@ import { NextResponse } from "next/server";
 import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/config";
 
 export async function POST(request: Request) {
-  const authHandler = new AuthHandler();
-  if (!(await authHandler.verifyAuth())) {
-    return NextResponse.json(
-      { error: "Endpoint accessed without authenticated session." },
-      { status: 403 }
-    );
-  }
-
   try {
+    const authHandler = new AuthHandler();
+    if (!(await authHandler.verifyAuth())) {
+      return NextResponse.json(
+        { error: "Endpoint accessed without authenticated session." },
+        { status: 403 }
+      );
+    }
+
     if (!S3_BUCKET_ENDPOINTS.splat || !S3_BUCKET_ENDPOINTS.video) {
       throw new Error(
         "Bucket Endpoints are not configured. Contact the administrator."
@@ -56,22 +56,22 @@ export async function POST(request: Request) {
       })
       .returning({ insertedId: splats.id })
       .then((ids) => {
-        if (ids.length == 1) {
+        if (ids.length === 1) {
           return ids[0].insertedId;
         }
         return null;
       });
 
-    if (splatId) {
-      return NextResponse.json(
-        {
-          message: `Splat inserted at id: ${splatId}`,
-        },
-        { status: 200 }
-      );
-    } else {
+    if (!splatId) {
       throw new Error("Unable to fetch inserted Id");
     }
+
+    return NextResponse.json(
+      {
+        message: `Splat inserted at id: ${splatId}`,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(
       { error: `Upload Splat Error: ${error}` },

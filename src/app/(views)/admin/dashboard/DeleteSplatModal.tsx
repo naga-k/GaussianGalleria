@@ -3,9 +3,10 @@ import { FormEvent, useState } from "react";
 
 interface DeleteSplatProps {
   id: number;
+  onSuccess: () => void;
 }
 
-export default function DeleteSplatModal({ id }: DeleteSplatProps) {
+export default function DeleteSplatModal({ id, onSuccess }: DeleteSplatProps) {
   const [isLoading, setLoading] = useState(false);
   const [isDeleted, setDeleted] = useState(false);
   const [isWrongText, setIsWrongText] = useState(false);
@@ -39,6 +40,7 @@ export default function DeleteSplatModal({ id }: DeleteSplatProps) {
         const result = await handleDelete(id);
         if (result) {
           setDeleted(true);
+          onSuccess();
         }
       }
     } catch (error) {
@@ -84,6 +86,16 @@ export default function DeleteSplatModal({ id }: DeleteSplatProps) {
             type="text"
             onInput={() => setIsWrongText(false)}
             placeholder="permanently delete"
+            autoComplete="off"
+            onCut={(event) => {
+              event.preventDefault();
+            }}
+            onCopy={(event) => {
+              event.preventDefault();
+            }}
+            onPaste={(event) => {
+              event.preventDefault();
+            }}
             required
           />
           <div className="flex mt-4 justify-end">

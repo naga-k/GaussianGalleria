@@ -2,7 +2,11 @@ import LoadSpinner from "@/src/app/components/LoadSpinner";
 import { FormEvent, useState } from "react";
 import SplatForm from "./components/SplatForm";
 
-export default function UploadSplatModal() {
+interface UploadSplatModalProps {
+  onSuccess: () => void;
+}
+
+export default function UploadSplatModal({ onSuccess }: UploadSplatModalProps) {
   const [isLoading, setLoading] = useState(false);
   const [isUploaded, setUploaded] = useState(false);
 
@@ -27,7 +31,7 @@ export default function UploadSplatModal() {
 
       if (
         !formData.get("name") ||
-        formData.get("name")?.toString().length == 0
+        formData.get("name")?.toString().trim().length == 0
       ) {
         throw new Error("Splat Name not provided.");
       }
@@ -43,6 +47,7 @@ export default function UploadSplatModal() {
       const result = await handleUploadSplat(formData);
       if (result) {
         setUploaded(true);
+        onSuccess();
         console.log("Splat upload successful!");
       }
     } catch (error) {

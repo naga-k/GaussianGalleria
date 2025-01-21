@@ -55,12 +55,14 @@ export default function DashBoard() {
 function DashboardContainer() {
   const [isLoading, setLoading] = useState(true);
   const [isOpened, setOpened] = useState(false);
+  const [isStale, setStale] = useState(true);
   const [mode, setMode] = useState(0);
   const [modalData, setModalData] = useState<ModalData>(initialModalState);
   const [splats, setSplats] = useState<SplatItem[]>([]);
 
   const onModalClose = () => {
     setModalData(initialModalState);
+    setMode(0);
     setOpened(false);
   };
 
@@ -103,29 +105,38 @@ function DashboardContainer() {
   };
 
   useEffect(() => {
-    setLoading(true);
-    fetch("/api/fetchVideoItems")
-      .then((res) => res.json())
-      .then((data: VideoItem[]) => {
-        setSplats(
-          data.map((videoItem: VideoItem) => {
-            return {
-              id: videoItem.id,
-              name: videoItem.name,
-              actions: (
-                <SplatRowActions
-                  id={videoItem.id}
-                  editCallback={editButtonCallback}
-                  deleteCallback={deleteButtonCallback}
-                />
-              ),
-            };
-          })
-        );
-      })
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
-  }, []);
+    if (isStale) {
+      setLoading(true);
+      fetch("/api/fetchVideoItems")
+        .then((res) => res.json())
+        .then((data: VideoItem[]) => {
+          setSplats(
+            data.map((videoItem: VideoItem) => {
+              return {
+                id: videoItem.id,
+                name: videoItem.name,
+                actions: (
+                  <SplatRowActions
+                    id={videoItem.id}
+                    editCallback={editButtonCallback}
+                    deleteCallback={deleteButtonCallback}
+                  />
+                ),
+              };
+            })
+          );
+        })
+        .catch((err) => console.error(err))
+        .finally(() => {
+          setStale(false);
+          setLoading(false);
+        });
+    }
+  }, [isStale]);
+
+  const handleModalSuccess = () => {
+    setStale(true);
+  };
 
   return (
     <>
@@ -152,9 +163,19 @@ function DashboardContainer() {
       >
         {
           {
-            1: <UploadSplatModal />,
-            2: <EditSplatModal splatData={modalData.data} />,
-            3: <DeleteSplatModal id={modalData.data.id} />,
+            1: <UploadSplatModal onSuccess={handleModalSuccess} />,
+            2: (
+              <EditSplatModal
+                splatData={modalData.data}
+                onSuccess={handleModalSuccess}
+              />
+            ),
+            3: (
+              <DeleteSplatModal
+                id={modalData.data.id}
+                onSuccess={handleModalSuccess}
+              />
+            ),
           }[mode]
         }
       </ModalContainer>
