@@ -1,4 +1,3 @@
-import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/config";
 import { CompletedPart, MultipartUploadConfig, MultipartUploadResponse } from "@/src/app/lib/definitions/SplatPayload";
 
 const DEFAULT_CHUNK_SIZE = 10000000; // 10MB

@@ -91,7 +91,7 @@ export default class S3Handler {
 
       const uploadId = startUploadResponse.UploadId;
 
-      let presignedUrls: string[] = [];
+      const presignedUrls: string[] = [];
 
       for (let i = 0; i < numberOfParts; i++) {
         const presignedUrl = await getSignedUrl(
