@@ -1,25 +1,73 @@
 import LoadSpinner from "@/src/app/components/LoadSpinner";
 import { FormEvent, useState } from "react";
 import SplatForm from "./components/SplatForm";
+import { handleMultipartUpload } from "./uploadSplatUtils/multiPartUploadUtils";
+import { SplatUploadMetaData } from "@/src/app/lib/definitions/SplatPayload";
 
 interface UploadSplatModalProps {
   onSuccess: () => void;
 }
-
 export default function UploadSplatModal({ onSuccess }: UploadSplatModalProps) {
   const [isLoading, setLoading] = useState(false);
   const [isUploaded, setUploaded] = useState(false);
 
   const handleUploadSplat = async (splatPayload: FormData) => {
-    const response = await fetch("/api/admin/uploadSplat", {
-      method: "POST",
-      body: splatPayload,
+
+
+    try {
+      setLoading(true);
+      const splatFile = splatPayload.get("splatFile") as File;
+      if (!splatFile) throw new Error("No Splat File selected");
+      const { success: splatSuccess, location: splatLocationUrl } = await handleMultipartUpload(splatFile, "splat");
+
+      const videoFile = splatPayload.get("videoFile") as File;
+      if (!videoFile) throw new Error("No Video File selected");
+      const { success: videoSuccess, location: videoLocationUrl} = await handleMultipartUpload(videoFile, "video");
+
+      const splatUploadMetaData: SplatUploadMetaData = {
+        name: splatPayload.get("name") as string,
+        description: splatPayload.get("description") as string,
+        splatFileUrl: splatLocationUrl,
+        videoFileUrl: videoLocationUrl,
+      }
+
+      const response = await fetch("/api/admin/createNewSplatEntry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          splatUploadMetaData
+        })
     });
     if (!response.ok) {
-      const payload = await response.json();
-      throw new Error(payload["error"]);
+        throw new Error(`Failed to complete multipart upload: ${response.statusText}`);
     }
-    return response.ok;
+  
+      
+      if (splatSuccess && videoSuccess) {
+        setUploaded(true);
+        onSuccess?.();
+      } else {
+        throw new Error("Multipart upload failed");
+      }
+      
+  } catch (error) {
+      console.error("Upload failed:", error);
+      throw error;
+  } finally {
+      setLoading(false);
+  }
+  return true;
+
+    // const response = await fetch("/api/admin/uploadSplat", {
+    //   method: "POST",
+    //   body: splatPayload,
+    // });
+    // if (!response.ok) {
+    //   const payload = await response.json();
+    //   throw new Error(payload["error"]);
+    // }
+    // return response.ok;
+  return true;
   };
 
   const handleURLSubmit = async (formEvent: FormEvent<HTMLFormElement>) => {
