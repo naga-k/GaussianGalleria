@@ -1,8 +1,6 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
 import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/configs/splatUpload";
-import { db } from "@/src/app/lib/db/db";
-import { splats } from "@/src/app/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { deleteRowWithID } from "@/src/app/lib/db/utils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -26,16 +24,7 @@ export async function POST(request: Request) {
       throw new Error("No splat ID provided.");
     }
 
-    const splatId = await db
-      .delete(splats)
-      .where(eq(splats.id, requestPayload.id))
-      .returning({ deletedId: splats.id })
-      .then((ids) => {
-        if (ids.length === 1) {
-          return ids[0].deletedId;
-        }
-        return null;
-      });
+    const splatId = await deleteRowWithID(requestPayload.id);
 
     if (!splatId) {
       throw new Error("Unable to fetch deleted Id");
