@@ -1,6 +1,5 @@
+import { DEFAULT_CHUNK_SIZE } from "@/src/app/lib/configs/splatUpload";
 import { CompletedPart, MultipartUploadConfig, MultipartUploadResponse, UploadType } from "@/src/app/lib/definitions/SplatPayload";
-
-const DEFAULT_CHUNK_SIZE = 10000000; // 10MB
 
 
 export async function initializeMultipartUpload( config: MultipartUploadConfig): Promise<MultipartUploadResponse> {
