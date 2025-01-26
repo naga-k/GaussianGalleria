@@ -1,3 +1,8 @@
+export enum UploadType {
+    SPLAT = "SPLAT",
+    VIDEO = "VIDEO"
+}
+
 export interface SplatUploadMetaData {
     name: string,
     description: string | null,
@@ -26,6 +31,6 @@ export interface MultipartUploadResponse {
 
 export interface MultipartUploadConfig {
     fileName: string;
-    uploadType: string;
+    uploadType: UploadType;
     numberOfParts: number;
 }

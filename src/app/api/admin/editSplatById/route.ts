@@ -1,6 +1,6 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
 import S3Handler from "@/src/app/lib/cloud/s3";
-import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/config";
+import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/configs/splatUpload";
 import { db } from "@/src/app/lib/db/db";
 import { splats } from "@/src/app/lib/db/schema";
 import { SplatEditPayload } from "@/src/app/lib/definitions/SplatPayload";

@@ -1,4 +1,4 @@
-import { CompletedPart, MultipartUploadConfig, MultipartUploadResponse } from "@/src/app/lib/definitions/SplatPayload";
+import { CompletedPart, MultipartUploadConfig, MultipartUploadResponse, UploadType } from "@/src/app/lib/definitions/SplatPayload";
 
 const DEFAULT_CHUNK_SIZE = 10000000; // 10MB
 
@@ -78,7 +78,7 @@ export async function completeMultipartUpload(
     }
 }
 
-export async function handleMultipartUpload(file: File, uploadType: string): Promise<{success: boolean, location: string}> {
+export async function handleMultipartUpload(file: File, uploadType: UploadType): Promise<{success: boolean, location: string}> {
     
     try {
 

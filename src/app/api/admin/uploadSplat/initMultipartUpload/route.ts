@@ -1,8 +1,9 @@
 import S3Handler from "@/src/app/lib/cloud/s3";
 import { NextResponse } from "next/server";
-import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/config";
+
 import AuthHandler from "@/src/app/lib/auth/authHandler";
-import { MultipartUploadConfig } from "@/src/app/lib/definitions/SplatPayload";
+import { MultipartUploadConfig, UploadType } from "@/src/app/lib/definitions/SplatPayload";
+import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/configs/splatUpload";
 
 export async function POST(request: Request) {
     try {
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
         }
 
-        const bucketEndpoint =  uploadType === "splat"? S3_BUCKET_ENDPOINTS.splat: S3_BUCKET_ENDPOINTS.video;
+        const bucketEndpoint =  uploadType === UploadType.SPLAT? S3_BUCKET_ENDPOINTS.splat: S3_BUCKET_ENDPOINTS.video;
         const key = `${bucketEndpoint}${new Date().toISOString()}${fileName}`;
 
         const s3Handler = new S3Handler();

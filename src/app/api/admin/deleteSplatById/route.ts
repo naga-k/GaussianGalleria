@@ -1,5 +1,5 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
-import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/config";
+import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/configs/splatUpload";
 import { db } from "@/src/app/lib/db/db";
 import { splats } from "@/src/app/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     if (!S3_BUCKET_ENDPOINTS.splat || !S3_BUCKET_ENDPOINTS.video) {
       throw new Error(
-        "Bucket Endpoints are not configured. Contact the administrator."
+        "Cloud Bucket Endpoints are not configured."
       );
     }
 

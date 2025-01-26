@@ -2,7 +2,8 @@ import LoadSpinner from "@/src/app/components/LoadSpinner";
 import { FormEvent, useState } from "react";
 import SplatForm from "./components/SplatForm";
 import { handleMultipartUpload } from "./uploadSplatUtils/multiPartUploadUtils";
-import { SplatUploadMetaData } from "@/src/app/lib/definitions/SplatPayload";
+import { SplatUploadMetaData, UploadType } from "@/src/app/lib/definitions/SplatPayload";
+
 
 interface UploadSplatModalProps {
   onSuccess: () => void;
@@ -18,11 +19,11 @@ export default function UploadSplatModal({ onSuccess }: UploadSplatModalProps) {
       setLoading(true);
       const splatFile = splatPayload.get("splatFile") as File;
       if (!splatFile) throw new Error("No Splat File selected");
-      const { success: splatSuccess, location: splatLocationUrl } = await handleMultipartUpload(splatFile, "splat");
+      const { success: splatSuccess, location: splatLocationUrl } = await handleMultipartUpload(splatFile, UploadType.SPLAT);
 
       const videoFile = splatPayload.get("videoFile") as File;
       if (!videoFile) throw new Error("No Video File selected");
-      const { success: videoSuccess, location: videoLocationUrl} = await handleMultipartUpload(videoFile, "video");
+      const { success: videoSuccess, location: videoLocationUrl} = await handleMultipartUpload(videoFile, UploadType.VIDEO);
 
       const splatUploadMetaData: SplatUploadMetaData = {
         name: splatPayload.get("name") as string,
