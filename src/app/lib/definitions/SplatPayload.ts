@@ -10,12 +10,12 @@ export interface SplatUploadMetaData {
     videoFileUrl: string,
 }
 
-export interface SplatEditPayload {
+export interface SplatEditMetaData {
     id: number,
     name: string,
     description: string | null,
-    splatFile: File | null,
-    videoFile: File | null,
+    splatFileUrl: string | null,
+    videoFileUrl: string | null,
 }
 
 export interface CompletedPart {

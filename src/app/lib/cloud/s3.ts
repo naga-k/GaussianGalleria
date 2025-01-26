@@ -117,7 +117,7 @@ export default class S3Handler {
     }
   }
 
-  async completeMultipartUpload(uploadId: string, key: string, parts: CompletedPart[]) {
+  async completeMultipartUpload(uploadId: string, key: string, parts: CompletedPart[]): Promise<string | null> {
     try {
       const command = new CompleteMultipartUploadCommand({
         Bucket: process.env.AWS_BUCKET_NAME!,
@@ -129,7 +129,8 @@ export default class S3Handler {
       });
 
       const response = await this.client.send(command);
-      return response.Location;
+      const location = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+      return location;
     } catch (error) {
       console.error("Error completing multipart upload:", error);
       return null;

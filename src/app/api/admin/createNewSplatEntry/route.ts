@@ -13,15 +13,9 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
-    const {name, description, splatFileUrl, videoFileUrl}: SplatUploadMetaData = body.splatUploadMetaData;
-
-    const splatId = await insertNewRowInDB(
-      name,
-      description || '',
-      splatFileUrl,
-      videoFileUrl
-    );
+    const body = await request.json(); 
+    const splatUploadMetaData: SplatUploadMetaData = body.splatUploadMetaData;
+    const splatId = await insertNewRowInDB(splatUploadMetaData);
 
     if (!splatId) {
       throw new Error("Unable to fetch inserted Id");
