@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { db } from "../../lib/db/db";
-import { splats } from "../../lib/db/schema";
 import VideoItem from "../../lib/definitions/VideoItem";
 import { fetchVideoItems } from "../../lib/db/splat_tb_utils";
 

@@ -129,6 +129,9 @@ export default class S3Handler {
       });
 
       const response = await this.client.send(command);
+      if (!response || !response.Location) {
+        throw new Error("Error completing multipart upload");
+      }
       const location = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
       return location;
     } catch (error) {
