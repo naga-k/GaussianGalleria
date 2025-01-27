@@ -113,6 +113,22 @@ export async function deleteRowWithID(id: number): Promise<number | null> {
     });
 }
 
-// export async function getSplatUrlWithId(id: number): Promise <string | null> {
-//   return db.select(splats).where(eq(splats.id, id)).returning({splatUrl: splats.splat}).then(())
-// }
+export async function getSplatUrlWithId(id: number): Promise<string | null> {
+  const result = await db
+    .select({ splatUrl: splats.splat })
+    .from(splats)
+    .where(eq(splats.id, id))
+    .then((data) => data);
+
+  return result.length === 1 ? result[0].splatUrl : null;
+}
+
+export async function getVideoUrlWithId(id: number): Promise<string | null> {
+  const result = await db
+    .select({ videoUrl: splats.video })
+    .from(splats)
+    .where(eq(splats.id, id))
+    .then((data) => data);
+
+  return result.length === 1 ? result[0].videoUrl : null;
+}

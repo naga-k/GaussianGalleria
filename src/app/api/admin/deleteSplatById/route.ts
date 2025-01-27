@@ -1,6 +1,7 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
+import S3Handler from "@/src/app/lib/cloud/s3";
 import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/configs/splatUpload";
-import { deleteRowWithID } from "@/src/app/lib/db/splat_tb_utils";
+import { deleteRowWithID, getSplatUrlWithId } from "@/src/app/lib/db/splat_tb_utils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -24,7 +25,18 @@ export async function POST(request: Request) {
       throw new Error("No splat ID provided.");
     }
 
+    const oldSplatUrl = await getSplatUrlWithId(requestPayload.id);
+    const oldVideoUrl = await getSplatUrlWithId(requestPayload.id);
+
     const splatId = await deleteRowWithID(requestPayload.id);
+
+    const s3Handler = new S3Handler();
+    if (oldSplatUrl) {
+      s3Handler.deleteFileWithUrl(oldSplatUrl);
+    }
+    if (oldVideoUrl) {
+      s3Handler.deleteFileWithUrl(oldVideoUrl);
+    }
 
     if (!splatId) {
       throw new Error("Unable to fetch deleted Id");

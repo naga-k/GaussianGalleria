@@ -3,7 +3,8 @@ import {
   GetObjectCommand,
   CreateMultipartUploadCommand,
   UploadPartCommand,
-  CompleteMultipartUploadCommand
+  CompleteMultipartUploadCommand,
+  DeleteObjectCommand
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -137,6 +138,38 @@ export default class S3Handler {
     } catch (error) {
       console.error("Error completing multipart upload:", error);
       return null;
+    }
+  }
+
+  async deleteFileWithUrl(url: string): Promise<boolean> {
+    try {
+      let bucket = process.env.AWS_BUCKET_NAME!;
+      let key = "";
+  
+      if (url.startsWith('https://')) {
+        const parsedUrl = new URL(url);
+        // Extract key from pathname (remove leading slash)
+        key = parsedUrl.pathname.substring(1);
+      } else if (url.startsWith('s3://')) {
+        const path = url.substring(5); // Remove 's3://'
+        const [bucketName, ...keyParts] = path.split('/');
+        bucket = bucketName;
+        key = keyParts.join('/');
+      } else {
+        // Treat as direct key
+        key = url;
+      }
+  
+      const deleteCommand = new DeleteObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      });
+  
+      await this.client.send(deleteCommand);
+      return true;
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      return false;
     }
   }
 }

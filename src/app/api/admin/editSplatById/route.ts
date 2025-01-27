@@ -1,5 +1,6 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
-import { updateRowWithID } from "@/src/app/lib/db/splat_tb_utils";
+import S3Handler from "@/src/app/lib/cloud/s3";
+import { getSplatUrlWithId, getVideoUrlWithId, updateRowWithID } from "@/src/app/lib/db/splat_tb_utils";
 import { SplatEditMetaData } from "@/src/app/lib/definitions/SplatPayload";
 import { NextResponse } from "next/server";
 
@@ -13,7 +14,29 @@ export async function POST(request: Request) {
       );
     }
     const splatEditMetaData: SplatEditMetaData  = await request.json();
+
+    let oldSplatUrl: string | null = null;
+    if(splatEditMetaData.splatFileUrl !== null) {
+      oldSplatUrl = await getSplatUrlWithId(splatEditMetaData.id);
+    }
+
+    let oldVideoUrl: string | null = null;
+    if(splatEditMetaData.videoFileUrl !== null){
+      oldVideoUrl = await getVideoUrlWithId(splatEditMetaData.id);
+    }
+
     const splatId = await updateRowWithID(splatEditMetaData);
+
+    const s3Handler = new S3Handler();
+    
+
+    if (oldSplatUrl !== null){
+      s3Handler.deleteFileWithUrl(oldSplatUrl);
+    }
+
+    if (oldVideoUrl !== null){
+      s3Handler.deleteFileWithUrl(oldVideoUrl);
+    }
     
     if (!splatId) {
       throw new Error("Unable to fetch edited Id");
@@ -32,3 +55,4 @@ export async function POST(request: Request) {
     );
   }
 }
+
