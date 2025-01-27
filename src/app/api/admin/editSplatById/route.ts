@@ -1,5 +1,5 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
-import { updateRowWithID } from "@/src/app/lib/db/utils";
+import { updateRowWithID } from "@/src/app/lib/db/splat_tb_utils";
 import { SplatEditMetaData } from "@/src/app/lib/definitions/SplatPayload";
 import { NextResponse } from "next/server";
 

@@ -1,8 +1,6 @@
 // src/app/api/gallery/[id]/splats/route.ts
 import { NextResponse } from "next/server";
-import { db } from "../../../../../lib/db/db";
-import { splats, splatsToGalleries } from "../../../../../lib/db/schema";
-import { eq } from "drizzle-orm";
+import { fetchGallerySplats } from "@/src/app/lib/db/gallery_tb_utils";
 
 export async function GET(
   request: Request,
@@ -10,15 +8,7 @@ export async function GET(
 ) {
   try {
     const galleryId = parseInt(params.id);
-    const gallerySplats = await db
-      .select({
-        id: splats.id,
-        video: splats.video,
-        splat: splats.splat,
-      })
-      .from(splatsToGalleries)
-      .innerJoin(splats, eq(splats.id, splatsToGalleries.splatId))
-      .where(eq(splatsToGalleries.galleryId, galleryId));
+    const gallerySplats = await fetchGallerySplats(galleryId);
 
     const formattedSplats = gallerySplats.map((item) => ({
       id: item.id,

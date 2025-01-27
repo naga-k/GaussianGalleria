@@ -1,12 +1,7 @@
 // src/app/api/fetchGalleries/route.ts
 import { NextResponse } from "next/server";
-import { galleries } from "@/src/app/lib/db/schema";
-import { db } from "@/src/app/lib/db/db";
-import GalleryItem from "@/src/app/lib/definitions/GalleryItem";
 import S3Handler from "@/src/app/lib/cloud/s3";
-
-
-
+import { fetchGalleries } from "@/src/app/lib/db/gallery_tb_utils";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -14,15 +9,7 @@ export const revalidate = 0;
 export async function GET() {
   try {
     const s3Handler = new S3Handler();
-    
-    const galleriesData: GalleryItem[] = await db
-      .select({
-        id: galleries.id,
-        name: galleries.name,
-        description: galleries.description,
-        thumbnailUrl: galleries.thumbnailUrl
-      })
-      .from(galleries);
+    const galleriesData = await fetchGalleries();
 
     // Presign all thumbnail URLs
     const galleriesWithSignedUrls = await Promise.all(

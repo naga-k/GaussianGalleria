@@ -1,8 +1,6 @@
 // src/app/api/gallery/[id]/description/route.ts
 import { NextResponse } from "next/server";
-import { db } from "../../../../../lib/db/db";
-import { galleries } from "../../../../../lib/db/schema";
-import { eq } from "drizzle-orm";
+import { fetchGalleryDetails } from "@/src/app/lib/db/gallery_tb_utils";
 
 export async function GET(
   request: Request,
@@ -10,24 +8,16 @@ export async function GET(
 ) {
   try {
     const galleryId = parseInt(params.id);
-    const galleryData = await db
-      .select({
-        id: galleries.id,
-        name: galleries.name,
-        description: galleries.description,
-      })
-      .from(galleries)
-      .where(eq(galleries.id, galleryId))
-      .limit(1);
+    const galleryData = await fetchGalleryDetails(galleryId);
 
-    if (!galleryData.length) {
+    if (galleryData == null) {
       return NextResponse.json(
         { error: "Gallery not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(galleryData[0], {
+    return NextResponse.json(galleryData, {
       headers: {
         "Cache-Control": "no-store, must-revalidate",
         "Pragma": "no-cache",

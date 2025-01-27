@@ -1,6 +1,6 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
 import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/configs/splatUpload";
-import { deleteRowWithID } from "@/src/app/lib/db/utils";
+import { deleteRowWithID } from "@/src/app/lib/db/splat_tb_utils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
