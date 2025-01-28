@@ -68,7 +68,7 @@ export default function EditSplatModal({
       const payload = await response.json();
       throw new Error(payload["error"]);
     }
-    setUploadProgress(80);
+    setUploadProgress(100);
     return response.ok;
   };
 
