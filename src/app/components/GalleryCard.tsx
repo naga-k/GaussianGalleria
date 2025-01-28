@@ -1,7 +1,7 @@
 // src/app/components/GalleryCard.tsx
 
 import Image from "next/image";
-import GalleryItem from "../lib/definitions/GalleryItem";
+import {GalleryItem} from "../lib/definitions/GalleryItem";
 
 interface Props {
   gallery: GalleryItem;

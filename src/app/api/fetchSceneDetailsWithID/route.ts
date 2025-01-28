@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { db } from "../../lib/db/db";
-import { splats } from "../../lib/db/schema";
-import { eq } from "drizzle-orm";
 import SceneItem from "../../lib/definitions/SceneItem";
+import { getSceneItemById } from "../../lib/db/splatTableUtils";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -17,33 +15,13 @@ export async function GET(request: Request) {
     if (!rawId) {
       return NextResponse.json({ error: "Id does not exist" }, { status: 404 });
     }
+      const sceneItem: SceneItem | null = await getSceneItemById(parseInt(rawId));
 
-    const id = parseInt(rawId);
-    const sceneItems: SceneItem[] = await db
-      .select({
-        id: splats.id,
-        name: splats.name,
-        description: splats.description,
-        splatUrl: splats.splat,
-        videoUrl: splats.video
-      })
-      .from(splats)
-      .where(eq(splats.id, id))
-      .then((data: SceneItem[]) => {
-        return data.map((item: SceneItem) => ({
-          id: item.id,
-          name: item.name || "",
-          description: item.description || "",
-          splatUrl: item.splatUrl || "",
-          videoUrl: item.videoUrl || ""
-        }));
-      });
-
-    if (!sceneItems.length) {
+    if (sceneItem === null) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    return NextResponse.json(sceneItems[0], {
+    return NextResponse.json(sceneItem, {
       headers: {
         "Cache-Control": "no-store, must-revalidate",
         Pragma: "no-cache",
