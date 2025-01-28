@@ -25,51 +25,57 @@ export default function EditSplatModal({
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleEditSplat = async (splatPayload: FormData) => {
-    setLoading(true);
-    setUploadProgress(0);
-
-    const splatFile = splatPayload.get("splatFile") as File;
-    let splatSuccess: boolean = false;
-    let splatLocationUrl: string | null = null;
-    if (splatFile.size > 0){
-      const result = await handleMultipartUpload(splatFile, UploadType.SPLAT);
-      splatSuccess = result.success;
-      splatLocationUrl = result.location;
-    }
-    setUploadProgress(40);
-
-    const videoFile = splatPayload.get("videoFile") as File;
-    let videoSuccess: boolean = false;
-    let videoLocationUrl: string | null = null ;
-    if (videoFile.size > 0){
-      const result = await handleMultipartUpload(videoFile, UploadType.VIDEO);
-      videoSuccess = result.success;
-      videoLocationUrl = result.location;
-    }
-    setUploadProgress(80);
-
-    const splatEditMetaData: SplatEditMetaData = {
-      id: splatPayload.get("id") as unknown as number,
-      name: splatPayload.get("name") as string,
-      description: splatPayload.get("description") as string,
-      splatFileUrl: splatLocationUrl,
-      videoFileUrl: videoLocationUrl,
-    }
-    if ((splatFile.size > 0 && !splatSuccess) || (videoFile.size > 0 && !videoSuccess)) {
-      throw new Error('File upload failed');
-    }
-    
+    try {
+      setLoading(true);
+      setUploadProgress(0);
+  
+      const splatFile = splatPayload.get("splatFile") as File;
+      let splatSuccess: boolean = false;
+      let splatLocationUrl: string | null = null;
+      if (splatFile.size > 0){
+        const result = await handleMultipartUpload(splatFile, UploadType.SPLAT);
+        splatSuccess = result.success;
+        splatLocationUrl = result.location;
+      }
+      setUploadProgress(40);
+  
+      const videoFile = splatPayload.get("videoFile") as File;
+      let videoSuccess: boolean = false;
+      let videoLocationUrl: string | null = null;
+      if (videoFile.size > 0){
+        const result = await handleMultipartUpload(videoFile, UploadType.VIDEO);
+        videoSuccess = result.success;
+        videoLocationUrl = result.location;
+      }
+      setUploadProgress(80);
+  
+      const splatEditMetaData: SplatEditMetaData = {
+        id: splatPayload.get("id") as unknown as number,
+        name: splatPayload.get("name") as string,
+        description: splatPayload.get("description") as string,
+        splatFileUrl: splatLocationUrl,
+        videoFileUrl: videoLocationUrl,
+      }
+      if ((splatFile.size > 0 && !splatSuccess) || (videoFile.size > 0 && !videoSuccess)) {
+        throw new Error('File upload failed');
+      }
           
-    const response = await fetch("/api/admin/editSplatById", {
-      method: "POST",
-      body: JSON.stringify(splatEditMetaData),
-    });
-    if (!response.ok) {
-      const payload = await response.json();
-      throw new Error(payload["error"]);
+      const response = await fetch("/api/admin/editSplatById", {
+        method: "POST",
+        body: JSON.stringify(splatEditMetaData),
+      });
+      if (!response.ok) {
+        const payload = await response.json();
+        throw new Error(payload["error"]);
+      }
+      setUploadProgress(100);
+      return response.ok;
+    } catch (error) {
+      console.error('Error editing splat:', error);
+      return false;
+    } finally {
+      setLoading(false);
     }
-    setUploadProgress(100);
-    return response.ok;
   };
 
   const handleURLSubmit = async (formEvent: FormEvent<HTMLFormElement>) => {
