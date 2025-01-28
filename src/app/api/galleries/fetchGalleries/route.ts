@@ -1,7 +1,7 @@
 // src/app/api/fetchGalleries/route.ts
 import { NextResponse } from "next/server";
 import S3Handler from "@/src/app/lib/cloud/s3";
-import { fetchGalleries } from "@/src/app/lib/db/gallery_tb_utils";
+import { fetchGalleries } from "@/src/app/lib/db/galleryTableUtils";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

@@ -1,6 +1,6 @@
 // src/app/api/gallery/[id]/splats/route.ts
 import { NextResponse } from "next/server";
-import { fetchGallerySplats } from "@/src/app/lib/db/gallery_tb_utils";
+import { fetchGallerySplats } from "@/src/app/lib/db/galleryTableUtils";
 
 export async function GET(
   request: Request,

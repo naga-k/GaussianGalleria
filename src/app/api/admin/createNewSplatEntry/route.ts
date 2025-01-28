@@ -1,7 +1,7 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
 import { NextResponse } from "next/server";
 import { SplatUploadMetaData } from "@/src/app/lib/definitions/SplatPayload";
-import { insertNewRowInDB } from "@/src/app/lib/db/splat_tb_utils";
+import { insertNewRowInDB } from "@/src/app/lib/db/splatTableUtils";
 
 export async function POST(request: Request) {
   try {

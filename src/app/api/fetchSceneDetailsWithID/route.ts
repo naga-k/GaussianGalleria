@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import SceneItem from "../../lib/definitions/SceneItem";
-import { getSceneItemById } from "../../lib/db/splat_tb_utils";
+import { getSceneItemById } from "../../lib/db/splatTableUtils";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

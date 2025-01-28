@@ -1,6 +1,6 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
 import S3Handler from "@/src/app/lib/cloud/s3";
-import { getSplatUrlWithId, getVideoUrlWithId, updateRowWithID } from "@/src/app/lib/db/splat_tb_utils";
+import { getSplatUrlWithId, getVideoUrlWithId, updateRowWithID } from "@/src/app/lib/db/splatTableUtils";
 import { SplatEditMetaData } from "@/src/app/lib/definitions/SplatPayload";
 import { NextResponse } from "next/server";
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import VideoItem from "../../lib/definitions/VideoItem";
-import { fetchVideoItems } from "../../lib/db/splat_tb_utils";
+import { fetchVideoItems } from "../../lib/db/splatTableUtils";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
