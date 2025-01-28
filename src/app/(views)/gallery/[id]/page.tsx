@@ -6,11 +6,8 @@ import VideoItem from "../../../lib/definitions/VideoItem";
 import { useRouter } from "next/navigation";
 import LoadSpinner from "../../../components/LoadSpinner";
 import Header from "@/src/app/components/Header";
+import { GalleryDetails } from "@/src/app/lib/definitions/GalleryItem";
 
-interface GalleryDetails {
-  name: string;
-  description: string | null;
-}
 
 export default function GalleryPage({ params }: { params: { id: string } }) {
   const [splats, setSplats] = useState<VideoItem[]>([]);

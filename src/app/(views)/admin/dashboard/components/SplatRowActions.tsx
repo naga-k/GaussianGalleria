@@ -1,26 +1,32 @@
-'use client';
+"use client";
 interface SplatRowActionsProps {
   id: number;
+  editCallback: (id: number) => void;
+  deleteCallback: (id: number) => void;
 }
 
-const SplatRowActions = ({ id }: SplatRowActionsProps) => {
+const SplatRowActions = ({
+  id,
+  editCallback,
+  deleteCallback,
+}: SplatRowActionsProps) => {
   const handleEdit = async () => {
     // TODO: API call to edit
-    console.log('Edit splat:', id);
+    editCallback(id);
   };
 
   const handleDelete = async () => {
     // TODO: API call to delete
-    console.log('Delete splat:', id);
+    deleteCallback(id);
   };
 
   const handleViewSplat = () => {
     // TODO: Navigate to splat view
-    window.open(`/viewer?id=${id}`, '_blank');
+    window.open(`/viewer?id=${id}`, "_blank");
   };
 
   const handleViewVideo = () => {
-    window.open(`/admin/dashboard/videoPreview?id=${id}`, '_blank');
+    window.open(`/admin/dashboard/videoPreview?id=${id}`, "_blank");
   };
 
   return (
