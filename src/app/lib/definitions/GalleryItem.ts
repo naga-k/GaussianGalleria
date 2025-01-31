@@ -11,6 +11,7 @@ export interface GalleryDetails {
 
   export type GallerySplat = {
     id: number;
+    name: string | null;
     video: string | null;
     splat: string | null;
   }
