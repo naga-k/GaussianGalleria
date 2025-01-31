@@ -1,12 +1,14 @@
 "use client";
 interface SplatRowActionsProps {
   id: number;
+  type: string;
   editCallback: (id: number) => void;
   deleteCallback: (id: number) => void;
 }
 
-const SplatRowActions = ({
+const TableRowActions = ({
   id,
+  type,
   editCallback,
   deleteCallback,
 }: SplatRowActionsProps) => {
@@ -43,20 +45,24 @@ const SplatRowActions = ({
       >
         Delete
       </button>
-      <button
-        onClick={handleViewSplat}
-        className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600"
-      >
-        View Splat
-      </button>
-      <button
-        onClick={handleViewVideo}
-        className="px-3 py-1 text-sm bg-purple-500 text-white rounded hover:bg-purple-600"
-      >
-        View Video
-      </button>
+      {type === "splat" && (
+        <>
+          <button
+            onClick={handleViewSplat}
+            className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600"
+          >
+            View Splat
+          </button>
+          <button
+            onClick={handleViewVideo}
+            className="px-3 py-1 text-sm bg-purple-500 text-white rounded hover:bg-purple-600"
+          >
+            View Video
+          </button>
+        </>
+      )}
     </div>
   );
 };
 
-export default SplatRowActions;
+export default TableRowActions;

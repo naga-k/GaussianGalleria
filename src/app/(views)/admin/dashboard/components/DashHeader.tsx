@@ -23,10 +23,19 @@ export default function DashHeader() {
           <li className="mx-2 p-2 cursor-pointer hover:text-teal-400">
             <a
               onClick={() => {
-                router.push("/");
+                router.push("/admin/dashboard");
               }}
             >
-              Galleries
+              Manage Splats
+            </a>
+          </li>
+          <li className="mx-2 p-2 cursor-pointer hover:text-teal-400">
+            <a
+              onClick={() => {
+                router.push("/admin/dashboard/galleries");
+              }}
+            >
+              Manage Galleries
             </a>
           </li>
           <li className="mx-2 p-2 cursor-pointer hover:text-teal-400">
@@ -35,7 +44,7 @@ export default function DashHeader() {
                 router.push("/");
               }}
             >
-              Manage Galleries
+              Galleries
             </a>
           </li>
           <li className="mx-2 p-2 cursor-pointer hover:text-red-400">

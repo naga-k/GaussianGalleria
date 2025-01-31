@@ -1,6 +1,6 @@
 import LoadSpinner from "@/src/app/components/LoadSpinner";
 import { FormEvent, useState } from "react";
-import SplatForm from "./components/SplatForm";
+import SplatForm from "../components/SplatForm";
 import { handleMultipartUpload } from "@/src/app/lib/cloud/uploadSplatUtils/multiPartUploadUtils";
 import { SplatEditMetaData, UploadType } from "@/src/app/lib/definitions/SplatPayload";
 
