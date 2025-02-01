@@ -22,12 +22,13 @@ export async function fetchGalleries(): Promise<GalleryItem[]> {
 
 export async function fetchGalleryDetails(
   galleryId: number
-): Promise<GalleryDetails | null> {
+): Promise<GalleryItem | null> {
   const galleryData = await db
     .select({
       id: galleries.id,
       name: galleries.name,
       description: galleries.description,
+      thumbnailUrl: galleries.thumbnailUrl,
     })
     .from(galleries)
     .where(eq(galleries.id, galleryId))
@@ -51,4 +52,48 @@ export async function fetchGallerySplats(
     .where(eq(splatsToGalleries.galleryId, galleryId));
 
   return gallerySplats;
+}
+
+export async function createGallery(
+  name: string,
+  splatIds: number[],
+  description?: string,
+  thumbnailUrl?: string
+): Promise<number> {
+  const ids = await db
+    .insert(galleries)
+    .values({
+      name: name,
+      description: description || null,
+      thumbnailUrl: thumbnailUrl || null,
+    })
+    .returning({ insertedId: galleries.id });
+
+  if (ids.length !== 1) {
+    throw new Error("An error occurred while fetching gallery ID.");
+  }
+
+  const galleryId = ids[0].insertedId;
+
+  const relationIds = await db
+    .insert(splatsToGalleries)
+    .values(
+      splatIds.map((id) => {
+        return { splatId: id, galleryId: galleryId };
+      })
+    )
+    .returning({ insertedId: splatsToGalleries.id });
+
+  if (relationIds.length !== splatIds.length) {
+    throw new Error("Uploaded Splat count does not match Splat Id length.");
+  }
+
+  return galleryId;
+}
+
+export async function deleteGallery(galleryId: number) {
+  await db
+    .delete(splatsToGalleries)
+    .where(eq(splatsToGalleries.galleryId, galleryId));
+  await db.delete(galleries).where(eq(galleries.id, galleryId));
 }

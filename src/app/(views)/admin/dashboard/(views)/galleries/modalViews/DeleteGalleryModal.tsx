@@ -3,20 +3,20 @@ import { useState } from "react";
 import DeleteForm from "../../../components/DeleteForm";
 
 interface DeleteGalleryProps {
-    id: number;
-    onSuccess: () => void;
-  }
+  id: number;
+  onSuccess: () => void;
+}
 
-export default function DeleteGalleryModal({ id, onSuccess }: DeleteGalleryProps) {
+export default function DeleteGalleryModal({
+  id,
+  onSuccess,
+}: DeleteGalleryProps) {
   const [isLoading, setLoading] = useState(false);
   const [isDeleted, setDeleted] = useState(false);
 
   const handleDelete = async (id: number) => {
-    const response = await fetch("/api/admin/deleteGalleryById", {
-      method: "POST",
-      body: JSON.stringify({
-        id: id,
-      }),
+    const response = await fetch(`/api/admin/galleries/${id}/delete`, {
+      method: "DELETE",
     });
     if (!response.ok) {
       const payload = await response.json();

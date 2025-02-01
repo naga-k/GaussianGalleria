@@ -8,6 +8,7 @@ import {
 } from "@/src/app/lib/definitions/GalleryItem";
 import TableRowActions from "../../components/TableRowActions";
 import DeleteGalleryModal from "./modalViews/DeleteGalleryModal";
+import CreateGalleryModal from "./modalViews/CreateGalleryModal";
 
 type GalleryMeta = {
   id: number;
@@ -118,14 +119,18 @@ export default function GalleryManager() {
     }
   }, [isStale, galleries]);
 
-  const onCreateClick = () => {
-    setMode(1);
-    setOpened(true);
-  };
-
   const onModalClose = () => {
     setMode(0);
     setOpened(false);
+  };
+
+  const onCreateClick = () => {
+    setModalData({
+      title: "Create Gallery",
+      data: { id: -1, name: "", splatIds: [] },
+    });
+    setMode(1);
+    setOpened(true);
   };
 
   const handleModalSuccess = () => {
@@ -155,6 +160,7 @@ export default function GalleryManager() {
       >
         {
           {
+            1: <CreateGalleryModal onSuccess={handleModalSuccess} />,
             3: (
               <DeleteGalleryModal
                 id={modalData.data.id}
