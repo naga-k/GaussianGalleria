@@ -1,21 +1,16 @@
 import LoadSpinner from "@/src/app/components/LoadSpinner";
 import { ReactNode, useEffect, useState } from "react";
-import TableViewer from "../../components/TableViewer";
+import TableViewer from "../components/TableViewer";
 import ModalContainer from "@/src/app/components/ModalContainer";
 import {
   GalleryItem,
+  GalleryMeta,
   GallerySplat,
 } from "@/src/app/lib/definitions/GalleryItem";
-import TableRowActions from "../../components/TableRowActions";
+import TableRowActions from "../components/TableRowActions";
 import DeleteGalleryModal from "./modalViews/DeleteGalleryModal";
 import CreateGalleryModal from "./modalViews/CreateGalleryModal";
-
-type GalleryMeta = {
-  id: number;
-  name: string;
-  description?: string;
-  splatIds: number[];
-};
+import EditGalleryModal from "./modalViews/EditGalleryModal";
 
 type GalleryTableItem = {
   id: number;
@@ -45,6 +40,44 @@ export default function GalleryManager() {
   const [galleries, setGalleries] = useState<GalleryTableItem[]>([]);
   const [modalData, setModalData] = useState(initialModalState);
 
+  const editButtonCallback = async (id: number) => {
+    try {
+      const metaResponse = await fetch(
+        `/api/galleries/gallery/${id}/fetchDetails`
+      );
+
+      if (!metaResponse.ok) {
+        const payload = await metaResponse.json();
+        throw new Error(payload["error"]);
+      }
+
+      const gallery: GalleryItem = await metaResponse.json();
+
+      const payload: GalleryMeta = {
+        id: gallery.id,
+        name: gallery.name,
+        description: gallery.description || undefined,
+        splatIds: [],
+      };
+
+      const splatResponse = await fetch(`/api/galleries/gallery/${id}/splats`);
+      if (!splatResponse.ok) {
+        const payload = await metaResponse.json();
+        throw new Error(payload["error"]);
+      }
+
+      const meta: GallerySplat[] = await splatResponse.json();
+
+      payload.splatIds = meta.map((data) => data.id);
+
+      setModalData({ title: "Edit Gallery", data: payload });
+      setMode(2);
+      setOpened(true);
+    } catch (error) {
+      console.log(`Error occurred during edit start: ${error}`);
+    }
+  };
+
   const deleteButtonCallback = (id: number) => {
     setModalData({
       title: "Delete Gallery",
@@ -56,40 +89,6 @@ export default function GalleryManager() {
 
   useEffect(() => {
     if (isStale) {
-      const editButtonCallback = async (id: number) => {
-        try {
-          const gallery = galleries.find((gallery) => gallery.id === id);
-
-          if (gallery === undefined) {
-            throw new Error(
-              "Unable to fetch gallery information from local state."
-            );
-          }
-
-          const payload: GalleryMeta = {
-            id: gallery.id,
-            name: gallery.name,
-            splatIds: [],
-          };
-
-          const metaResponse = await fetch(
-            `/api/galleries/gallery/${id}/splats`
-          );
-          if (!metaResponse.ok) {
-            throw new Error(`HTTP error! status: ${metaResponse.status}`);
-          }
-          const meta: GallerySplat[] = await metaResponse.json();
-
-          payload.splatIds.concat(meta.map((data) => data.id));
-
-          setModalData({ title: "Edit Gallery", data: payload });
-          setMode(2);
-          setOpened(true);
-        } catch (error) {
-          console.log(`Error occurred during edit start: ${error}`);
-        }
-      };
-
       setLoading(true);
       fetch("/api/galleries/fetchGalleries")
         .then((res) => res.json())
@@ -117,7 +116,7 @@ export default function GalleryManager() {
           setLoading(false);
         });
     }
-  }, [isStale, galleries]);
+  }, [isStale]);
 
   const onModalClose = () => {
     setMode(0);
@@ -138,13 +137,11 @@ export default function GalleryManager() {
   };
 
   return (
-    <>
-      <div className="min-w-screen flex flex-column px-4 items-center justify-end">
-        <div className="w-fit h-fit">
-          <button onClick={onCreateClick} className="default-button">
-            + Create
-          </button>
-        </div>
+    <div className="w-full flex flex-col justify-center">
+      <div className="min-w-screen flex flex-column mx-4 px-4 py-2 items-center justify-end">
+        <button onClick={onCreateClick} className="default-button">
+          + Create
+        </button>
       </div>
 
       {isLoading ? (
@@ -161,6 +158,12 @@ export default function GalleryManager() {
         {
           {
             1: <CreateGalleryModal onSuccess={handleModalSuccess} />,
+            2: (
+              <EditGalleryModal
+                initialData={modalData.data}
+                onSuccess={handleModalSuccess}
+              />
+            ),
             3: (
               <DeleteGalleryModal
                 id={modalData.data.id}
@@ -170,6 +173,6 @@ export default function GalleryManager() {
           }[mode]
         }
       </ModalContainer>
-    </>
+    </div>
   );
 }

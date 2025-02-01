@@ -1,6 +1,7 @@
 // src/app/api/gallery/[id]/description/route.ts
 import { NextResponse } from "next/server";
 import { fetchGalleryDetails } from "@/src/app/lib/db/galleryTableUtils";
+import { revalidatePath } from "next/cache";
 
 export async function GET(
   request: Request,
@@ -11,17 +12,14 @@ export async function GET(
     const galleryData = await fetchGalleryDetails(galleryId);
 
     if (galleryData == null) {
-      return NextResponse.json(
-        { error: "Gallery not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Gallery not found" }, { status: 404 });
     }
 
     return NextResponse.json(galleryData, {
       headers: {
         "Cache-Control": "no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
+        Pragma: "no-cache",
+        Expires: "0",
       },
     });
   } catch (error) {

@@ -121,13 +121,11 @@ export default function SplatManager() {
   };
 
   return (
-    <>
-      <div className="min-w-screen flex flex-column px-4 items-center justify-end">
-        <div className="w-fit h-fit">
-          <button onClick={onUploadClick} className="default-button">
-            + Upload
-          </button>
-        </div>
+    <div className="w-full flex flex-col justify-center">
+      <div className="min-w-screen flex flex-column mx-4 px-4 py-2 items-center justify-end">
+        <button onClick={onUploadClick} className="default-button">
+          + Upload
+        </button>
       </div>
 
       {isLoading ? (
@@ -159,6 +157,6 @@ export default function SplatManager() {
           }[mode]
         }
       </ModalContainer>
-    </>
+    </div>
   );
 }

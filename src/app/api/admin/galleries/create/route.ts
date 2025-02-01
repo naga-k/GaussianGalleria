@@ -42,9 +42,13 @@ export async function POST(request: Request) {
         throw new Error("S3 Bucket Endpoints are not configured.");
       }
 
+      const filenameWithTimestamp = `${new Date().getTime().toString()}_${
+        payload.thumbnail.name
+      }`;
+
       const s3Handler = new S3Handler();
       thumbnailUrl = await s3Handler.upload(
-        payload.thumbnail.name,
+        filenameWithTimestamp,
         payload.thumbnail,
         S3_BUCKET_ENDPOINTS.thumbnail
       );

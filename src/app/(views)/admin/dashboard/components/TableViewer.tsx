@@ -12,7 +12,7 @@ export default function TableViewer<T extends TableItem>({
   values,
 }: TableViewerProps<T extends TableItem ? TableItem : unknown>) {
   return (
-    <div className="m-4 border border-b border-slate-600 rounded-lg">
+    <div className="mx-8 my-2 border border-b border-slate-600 rounded-lg">
       <table className="w-full">
         <thead>
           <tr className="border-b border-slate-600">
@@ -39,9 +39,7 @@ export default function TableViewer<T extends TableItem>({
           ))}
         </tbody>
       </table>
-      <div className="w-full px-4 py-8">
-        {/* TODO: Pagination Support */}
-      </div>
+      <div className="w-full px-4 py-8">{/* TODO: Pagination Support */}</div>
     </div>
   );
 }

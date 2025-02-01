@@ -1,6 +1,6 @@
 import LoadSpinner from "@/src/app/components/LoadSpinner";
 import { useState } from "react";
-import DeleteForm from "../../../components/DeleteForm";
+import DeleteForm from "../../components/DeleteForm";
 
 interface DeleteGalleryProps {
   id: number;

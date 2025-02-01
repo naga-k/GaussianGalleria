@@ -1,6 +1,7 @@
 import LoadSpinner from "@/src/app/components/LoadSpinner";
+import { GalleryMeta } from "@/src/app/lib/definitions/GalleryItem";
 import VideoItem from "@/src/app/lib/definitions/VideoItem";
-import { ChangeEvent, FormEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 type SplatDetails = {
   id: number;
@@ -9,12 +10,7 @@ type SplatDetails = {
 
 interface GalleryFormProps {
   onSubmit: (formData: FormData) => void;
-  initialData?: {
-    id: number;
-    name: string;
-    description?: string;
-    splatIds: number[];
-  };
+  initialData?: GalleryMeta;
 }
 
 export default function GalleryForm({
@@ -89,6 +85,7 @@ export default function GalleryForm({
           key={1}
           onStepSubmit={onStepTwoSubmit}
           splatDetails={splatDetails}
+          initialData={initialData}
         />
       ),
     };
@@ -197,9 +194,8 @@ function StepTwoForm({
   initialData,
 }: StepTwoProps) {
   const [selectedSplatIds, setSelectedSplatIds] = useState<number[]>(
-    initialData ? initialData.splatIds : []
+    initialData?.splatIds || []
   );
-
   const [searchResults, setSearchResults] =
     useState<SplatDetails[]>(splatDetails);
 
@@ -232,13 +228,14 @@ function StepTwoForm({
 
   return (
     <div className="w-full flex flex-col p-8 items-start justify-start">
+      <label className="text-teal-400">Select Splats</label>
       <input
         className="w-full my-2 px-4 py-2 bg-inherit border border-slate-400 rounded"
         type="text"
         placeholder="Search Splats..."
         onChange={searchSplat}
       />
-      <div>
+      <div className="w-full">
         <ul className="w-full h-[50svh] my-2 px-2 overflow-y-auto bg-inherit border border-slate-400 rounded">
           {searchResults.length > 0 ? (
             searchResults.map((splat: SplatDetails) => {
@@ -250,7 +247,7 @@ function StepTwoForm({
                       : ""
                   }`}
                   key={splat.id}
-                  onClick={(event) => handleOptionSelect(splat.id)}
+                  onClick={() => handleOptionSelect(splat.id)}
                   value={splat.id}
                 >
                   {splat.name}
@@ -258,7 +255,7 @@ function StepTwoForm({
               );
             })
           ) : (
-            <li className="min-w-full p-2 my-2 rounded cursor-pointer text-wrap">
+            <li className="min-w-full p-2 my-2 rounded">
               <p>No results</p>
             </li>
           )}

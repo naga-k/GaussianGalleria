@@ -1,7 +1,10 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
 import S3Handler from "@/src/app/lib/cloud/s3";
 import { S3_BUCKET_ENDPOINTS } from "@/src/app/lib/configs/splatUpload";
-import { deleteRowWithID, getSplatUrlWithId } from "@/src/app/lib/db/splatTableUtils";
+import {
+  deleteRowWithID,
+  getSplatUrlWithId,
+} from "@/src/app/lib/db/splatTableUtils";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -15,9 +18,7 @@ export async function POST(request: Request) {
     }
 
     if (!S3_BUCKET_ENDPOINTS.splat || !S3_BUCKET_ENDPOINTS.video) {
-      throw new Error(
-        "Cloud Bucket Endpoints are not configured."
-      );
+      throw new Error("Cloud Bucket Endpoints are not configured.");
     }
 
     const requestPayload = await request.json();

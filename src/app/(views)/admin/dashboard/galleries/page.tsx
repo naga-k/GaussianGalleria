@@ -2,8 +2,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import DashHeader from "../../components/DashHeader";
-import AuthContainer from "../../../components/AuthContainer";
+import DashHeader from "../components/DashHeader";
+import AuthContainer from "../../components/AuthContainer";
 import GalleryManager from "./GalleryManager";
 
 export default function DashBoard() {
