@@ -1,10 +1,10 @@
-// src/app/admin/dashboard/page.tsx
+// src/app/admin/dashboard/galleries/page.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
-import DashHeader from "./components/DashHeader";
-import AuthContainer from "../components/AuthContainer";
-import SplatManager from "./SplatManager";
+import DashHeader from "../components/DashHeader";
+import AuthContainer from "../../components/AuthContainer";
+import GalleryManager from "./GalleryManager";
 
 export default function DashBoard() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function DashBoard() {
       }}
     >
       <DashHeader />
-      <SplatManager />
+      <GalleryManager />
     </AuthContainer>
   );
 }
