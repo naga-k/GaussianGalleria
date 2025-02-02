@@ -1,5 +1,5 @@
 "use client";
-interface SplatRowActionsProps {
+interface TableRowActionsProps {
   id: number;
   type: string;
   editCallback: (id: number) => void;
@@ -11,7 +11,7 @@ const TableRowActions = ({
   type,
   editCallback,
   deleteCallback,
-}: SplatRowActionsProps) => {
+}: TableRowActionsProps) => {
   const handleEdit = async () => {
     editCallback(id);
   };
