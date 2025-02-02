@@ -5,15 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.0] - 2025-02-01
 
 ### Added
 - Galleries for splats
--  Admin Dashboard to add splats directly to the DB and manage galleries
+- Admin Dashboard to add splats directly to the DB and manage galleries
 
 ### Changed
 - Change project name to GaussianGalleria with the description
-- Replaced splats splats view on the homepage with gallery view
+- Replaced splats view on the homepage with gallery view
 - Updated Next.js to version 14.2.23
 
 ### Removed
