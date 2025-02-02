@@ -1,6 +1,6 @@
 import { FormEvent } from "react";
 
-interface SplatUploadFormProps {
+interface SplatFormProps {
   onSubmitCallback: (formevent: FormEvent<HTMLFormElement>) => void;
   submitBtnLabel: string;
   initialData?: {
@@ -9,11 +9,11 @@ interface SplatUploadFormProps {
   };
 }
 
-export default function SplatUploadForm({
+export default function SplatForm({
   onSubmitCallback,
   submitBtnLabel,
   initialData,
-}: SplatUploadFormProps) {
+}: SplatFormProps) {
   return (
     <>
       <form

@@ -1,27 +1,26 @@
 "use client";
 interface SplatRowActionsProps {
   id: number;
+  type: string;
   editCallback: (id: number) => void;
   deleteCallback: (id: number) => void;
 }
 
-const SplatRowActions = ({
+const TableRowActions = ({
   id,
+  type,
   editCallback,
   deleteCallback,
 }: SplatRowActionsProps) => {
   const handleEdit = async () => {
-    // TODO: API call to edit
     editCallback(id);
   };
 
   const handleDelete = async () => {
-    // TODO: API call to delete
     deleteCallback(id);
   };
 
   const handleViewSplat = () => {
-    // TODO: Navigate to splat view
     window.open(`/viewer?id=${id}`, "_blank");
   };
 
@@ -30,7 +29,7 @@ const SplatRowActions = ({
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="w-fit flex gap-2">
       <button
         onClick={handleEdit}
         className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -43,20 +42,24 @@ const SplatRowActions = ({
       >
         Delete
       </button>
-      <button
-        onClick={handleViewSplat}
-        className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600"
-      >
-        View Splat
-      </button>
-      <button
-        onClick={handleViewVideo}
-        className="px-3 py-1 text-sm bg-purple-500 text-white rounded hover:bg-purple-600"
-      >
-        View Video
-      </button>
+      {type === "splat" && (
+        <>
+          <button
+            onClick={handleViewSplat}
+            className="px-3 py-1 text-sm bg-green-500 text-white rounded hover:bg-green-600"
+          >
+            View Splat
+          </button>
+          <button
+            onClick={handleViewVideo}
+            className="px-3 py-1 text-sm bg-purple-500 text-white rounded hover:bg-purple-600"
+          >
+            View Video
+          </button>
+        </>
+      )}
     </div>
   );
 };
 
-export default SplatRowActions;
+export default TableRowActions;

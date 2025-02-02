@@ -12,6 +12,7 @@ export async function GET(
 
     const formattedSplats = gallerySplats.map((item) => ({
       id: item.id,
+      name: item.name,
       src: item.video || "",
       splatUrl: item.splat || "",
     }));

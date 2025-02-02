@@ -1,11 +1,16 @@
 import { eq } from "drizzle-orm";
-import { SplatEditMetaData, SplatUploadMetaData } from "../definitions/SplatPayload";
+import {
+  SplatEditMetaData,
+  SplatUploadMetaData,
+} from "../definitions/SplatPayload";
 import { db } from "./db";
 import { splats } from "./schema";
 import SceneItem from "../definitions/SceneItem";
 import VideoItem from "../definitions/VideoItem";
 
-export async function insertNewRowInDB(splatUploadMetaData: SplatUploadMetaData): Promise<number | null> {
+export async function insertNewRowInDB(
+  splatUploadMetaData: SplatUploadMetaData
+): Promise<number | null> {
   const ids = await db
     .insert(splats)
     .values({
@@ -53,7 +58,7 @@ export async function getSceneItemById(id: number): Promise<SceneItem | null> {
       name: splats.name,
       description: splats.description,
       splatUrl: splats.splat,
-      videoUrl: splats.video
+      videoUrl: splats.video,
     })
     .from(splats)
     .where(eq(splats.id, id))
@@ -63,14 +68,16 @@ export async function getSceneItemById(id: number): Promise<SceneItem | null> {
         name: item.name || "",
         description: item.description || "",
         splatUrl: item.splatUrl || "",
-        videoUrl: item.videoUrl || ""
+        videoUrl: item.videoUrl || "",
       }));
     });
 
   return sceneItems.length ? sceneItems[0] : null;
 }
 
-export async function updateRowWithID(splatEditMetaData: SplatEditMetaData): Promise<number | null> {
+export async function updateRowWithID(
+  splatEditMetaData: SplatEditMetaData
+): Promise<number | null> {
   try {
     let editSplatQueryParams = {
       name: splatEditMetaData.name,
@@ -88,21 +95,26 @@ export async function updateRowWithID(splatEditMetaData: SplatEditMetaData): Pro
       });
     }
 
-    const result = await db.update(splats)
+    editSplatQueryParams = Object.assign(editSplatQueryParams, {
+      updatedAt: new Date(),
+    });
+
+    const result = await db
+      .update(splats)
       .set(editSplatQueryParams)
       .where(eq(splats.id, splatEditMetaData.id))
       .returning({ editedId: splats.id });
 
     return result.length === 1 ? result[0].editedId : null;
   } catch (error) {
-    console.error('Error updating row:', error);
+    console.error("Error updating row:", error);
     return null;
   }
 }
 
 export async function deleteRowWithID(id: number): Promise<number | null> {
-
-  return db.delete(splats)
+  return db
+    .delete(splats)
     .where(eq(splats.id, id))
     .returning({ deletedId: splats.id })
     .then((ids) => {

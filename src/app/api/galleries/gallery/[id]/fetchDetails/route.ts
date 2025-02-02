@@ -11,17 +11,14 @@ export async function GET(
     const galleryData = await fetchGalleryDetails(galleryId);
 
     if (galleryData == null) {
-      return NextResponse.json(
-        { error: "Gallery not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Gallery not found" }, { status: 404 });
     }
 
     return NextResponse.json(galleryData, {
       headers: {
         "Cache-Control": "no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
+        Pragma: "no-cache",
+        Expires: "0",
       },
     });
   } catch (error) {

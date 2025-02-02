@@ -14,32 +14,41 @@ export default function DashHeader() {
   };
   return (
     <>
-      <header className="min-w-screen p-4 flex flex-row justify-between items-center">
-        <div className="mx-2 p-2 font-bold text-lg hover:text-teal-400">
+      <header className="max-w-screen mx-4 p-4 flex flex-row justify-between items-center">
+        <div className="font-bold text-lg hover:text-teal-400">
           <p>GaussianGallery Dashboard</p>
         </div>
 
         <ul className="flex flex-row justify-between list-none">
-          <li className="mx-2 p-2 cursor-pointer hover:text-teal-400">
-            <a
-              onClick={() => {
-                router.push("/");
-              }}
-            >
-              Galleries
-            </a>
+          <li
+            onClick={() => {
+              router.push("/admin/dashboard");
+            }}
+            className="mx-2 p-2 cursor-pointer hover:text-teal-400"
+          >
+            Manage Splats
           </li>
-          <li className="mx-2 p-2 cursor-pointer hover:text-teal-400">
-            <a
-              onClick={() => {
-                router.push("/");
-              }}
-            >
-              Manage Galleries
-            </a>
+          <li
+            onClick={() => {
+              router.push("/admin/dashboard/galleries");
+            }}
+            className="mx-2 p-2 cursor-pointer hover:text-teal-400"
+          >
+            Manage Galleries
           </li>
-          <li className="mx-2 p-2 cursor-pointer hover:text-red-400">
-            <a onClick={handleLogout}>Log Out</a>
+          <li
+            onClick={() => {
+              router.push("/");
+            }}
+            className="mx-2 p-2 cursor-pointer hover:text-teal-400"
+          >
+            Galleries
+          </li>
+          <li
+            onClick={handleLogout}
+            className="mx-2 p-2 cursor-pointer hover:text-red-400"
+          >
+            Log Out
           </li>
         </ul>
       </header>
