@@ -13,17 +13,14 @@ const TableRowActions = ({
   deleteCallback,
 }: SplatRowActionsProps) => {
   const handleEdit = async () => {
-    // TODO: API call to edit
     editCallback(id);
   };
 
   const handleDelete = async () => {
-    // TODO: API call to delete
     deleteCallback(id);
   };
 
   const handleViewSplat = () => {
-    // TODO: Navigate to splat view
     window.open(`/viewer?id=${id}`, "_blank");
   };
 
@@ -32,7 +29,7 @@ const TableRowActions = ({
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="w-fit flex gap-2">
       <button
         onClick={handleEdit}
         className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"

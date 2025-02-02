@@ -14,7 +14,7 @@ export default function DashHeader() {
   };
   return (
     <>
-      <header className="min-w-screen mx-4 p-4 flex flex-row justify-between items-center">
+      <header className="max-w-screen mx-4 p-4 flex flex-row justify-between items-center">
         <div className="font-bold text-lg hover:text-teal-400">
           <p>GaussianGallery Dashboard</p>
         </div>

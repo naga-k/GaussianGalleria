@@ -137,8 +137,11 @@ export default function GalleryManager() {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center">
-      <div className="min-w-screen flex flex-column mx-4 px-4 py-2 items-center justify-end">
+    <div className="max-w-screen mx-4 px-4 flex flex-col justify-center">
+      <div className="flex flex-column py-2 items-center justify-between">
+        <div className="flex justify-start">
+          <h3 className="text-lg font-bold">Manage Galleries</h3>
+        </div>
         <button onClick={onCreateClick} className="default-button">
           + Create
         </button>

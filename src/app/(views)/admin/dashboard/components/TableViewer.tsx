@@ -12,7 +12,7 @@ export default function TableViewer<T extends TableItem>({
   values,
 }: TableViewerProps<T extends TableItem ? TableItem : unknown>) {
   return (
-    <div className="mx-8 my-2 border border-b border-slate-600 rounded-lg">
+    <div className="my-2 border border-b border-slate-600 rounded-lg">
       <table className="w-full">
         <thead>
           <tr className="border-b border-slate-600">
