@@ -1,13 +1,13 @@
-# 3D Portfolio
+# GaussianGalleria
 
-A Next.js-based portfolio website for showcasing interactive 3D scenes using Splat visualization technology.
+A Next.js-based portfolio website for showcasing interactive 3D scenes using [Gaussian Splatting](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/) and web viewers.
 
 Demo: [Hosted on Vercel](https://3-d-portfolio-tau-three.vercel.app)
 
 ## Overview
 
-This portfolio website features:
-- Grid-based homepage displaying 3D scenes
+This Gallery website features:
+- Grid-based pages displaying 3D scenes
 - Interactive viewer for each scene using Splat technology
 - Integration with NeonDB for data storage
 - S3 storage for 3D assets
@@ -72,20 +72,6 @@ npx drizzle-kit migrate
 4. Insert dummy data:
    - Use the SQL script located at `script/insertSplat.sql`
    - Execute the script against your Postgres database in NeonDB
-
-### Alternative: Local JSON Data
-
-You can alternatively add items directly to `public/splatData.json`:
-```json
-{
-  "items": [
-    {
-      "src": "s3://your-bucket/path",
-      "splatSrc": "s3://your-bucket/splat-path"
-    }
-  ]
-}
-```
 
 ## Technical Stack
 

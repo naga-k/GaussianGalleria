@@ -4,7 +4,7 @@ import React, { useEffect, Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import SplatViewer from "./components/SplatViewer";
-import SceneItem from "../models/SceneItem";
+import SceneItem from "../../lib/definitions/SceneItem";
 
 const Viewer: React.FC = () => {
   const router = useRouter();
@@ -72,12 +72,13 @@ const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
       id: item.id,
       name: item.name,
       description: item.description,
-      splatUrl: signedUrls[0], // Get the first (and only) signed URL
+      splatUrl: signedUrls[0],
+      videoUrl: item.videoUrl
     };
   };
 
   const handleClose = () => {
-    router.push("/");
+    router.back();
   };
 
   if (loading) {

@@ -1,0 +1,1 @@
+ALTER TABLE "splats" ADD COLUMN "description" text;

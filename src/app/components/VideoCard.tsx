@@ -1,6 +1,6 @@
-// app/components/VideoItem.tsx
+// src/app/components/VideoItem.tsx
 import React, { useRef, useState, useEffect } from 'react';
-import VideoItem from '../models/VideoItem';
+import VideoItem from '../lib/definitions/VideoItem';
 
 interface VideoItemProps {
   item: VideoItem;
@@ -21,9 +21,9 @@ export default function VideoCard({ item, onClick }: VideoItemProps) {
     }
   }, []);
 
-  useEffect(() => {
-    console.log('VideoItem received:', item);
-  });
+  // useEffect(() => {
+  //   console.log('VideoItem received:', item);
+  // });
 
   const handleVideoLoad = () => {
     setIsLoaded(true);
