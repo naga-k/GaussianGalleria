@@ -74,6 +74,14 @@ export async function POST(
       galleryMeta.splatIds
     );
 
+    if (
+      galleryDetails.thumbnailUrl &&
+      galleryDetails.thumbnailUrl !== thumbnailUrl
+    ) {
+      const s3Handler = new S3Handler();
+      await s3Handler.deleteFileWithUrl(galleryDetails.thumbnailUrl);
+    }
+
     return NextResponse.json(
       { message: `Gallery (ID: ${editedId}) has been edited.` },
       { status: 200 }
