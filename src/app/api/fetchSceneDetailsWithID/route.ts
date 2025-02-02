@@ -1,20 +1,11 @@
 import { NextResponse } from "next/server";
-import { db } from "../../lib/db/db";
-import { splats } from "../../lib/db/schema";
-import { eq } from "drizzle-orm";
 import SceneItem from "../../lib/definitions/SceneItem";
+import { getSceneItemById } from "../../lib/db/splatTableUtils";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 // app/api/fetchSceneDetailsWithID/route.ts
-
-interface SceneQueryResult {
-  id: number;
-  name: string | null;
-  description: string | null;
-  splat: string | null;
-}
 
 export async function GET(request: Request) {
   try {
@@ -24,31 +15,13 @@ export async function GET(request: Request) {
     if (!rawId) {
       return NextResponse.json({ error: "Id does not exist" }, { status: 404 });
     }
+      const sceneItem: SceneItem | null = await getSceneItemById(parseInt(rawId));
 
-    const id = parseInt(rawId);
-    const sceneItems: SceneItem[] = await db
-      .select({
-        id: splats.id,
-        name: splats.name,
-        description: splats.description,
-        splat: splats.splat,
-      })
-      .from(splats)
-      .where(eq(splats.id, id))
-      .then((data: SceneQueryResult[]) => {
-        return data.map((item: SceneQueryResult) => ({
-          id: item.id,
-          name: item.name || "Untitled",
-          description: item.description || "No description available",
-          splatUrl: item.splat || "",
-        }));
-      });
-
-    if (!sceneItems.length) {
+    if (sceneItem === null) {
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
     }
 
-    return NextResponse.json(sceneItems[0], {
+    return NextResponse.json(sceneItem, {
       headers: {
         "Cache-Control": "no-store, must-revalidate",
         Pragma: "no-cache",

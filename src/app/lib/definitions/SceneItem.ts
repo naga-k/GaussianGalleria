@@ -1,6 +1,7 @@
 export default interface SceneItem {
   id: number;
-  name: string;
-  description: string;
+  name: string | null;
+  description: string | null;
   splatUrl: string | null;
+  videoUrl: string | null;
 }
