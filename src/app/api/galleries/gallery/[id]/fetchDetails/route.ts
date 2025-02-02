@@ -1,7 +1,6 @@
 // src/app/api/gallery/[id]/description/route.ts
 import { NextResponse } from "next/server";
 import { fetchGalleryDetails } from "@/src/app/lib/db/galleryTableUtils";
-import { revalidatePath } from "next/cache";
 
 export async function GET(
   request: Request,
