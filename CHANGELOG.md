@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Old documentation from README
-- Dark mode discarded
+
+### Fixed
+- Dark mode works correctly
 
 ## [0.1.0] - 2024-12-29
 
