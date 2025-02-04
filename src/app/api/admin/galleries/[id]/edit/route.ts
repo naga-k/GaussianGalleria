@@ -89,8 +89,9 @@ export async function POST(
       { status: 200 }
     );
   } catch (error) {
+    console.error('Error in galleries/[id]/edit:', error);
     return NextResponse.json(
-      { error: `Upload Splat Error: ${error}` },
+      { error: `Edit Galleries Error: ${error}` },
       { status: 500 }
     );
   }
