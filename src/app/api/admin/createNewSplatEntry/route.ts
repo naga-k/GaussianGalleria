@@ -1,7 +1,7 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
 import { NextResponse } from "next/server";
 import { SplatUploadMetaData } from "@/src/app/lib/definitions/SplatPayload";
-import { insertNewRowInDB } from "@/src/app/lib/db/splatTableUtils";
+import { addSplatRecordToDB } from "@/src/app/lib/db/splatTableUtils";
 
 export async function POST(request: Request) {
   try {
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
     const body = await request.json(); 
     const splatUploadMetaData: SplatUploadMetaData = body.splatUploadMetaData;
-    const splatId = await insertNewRowInDB(splatUploadMetaData);
+    const splatId = await addSplatRecordToDB(splatUploadMetaData);
 
     if (!splatId) {
       throw new Error("Unable to fetch inserted Id");

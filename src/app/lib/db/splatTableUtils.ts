@@ -8,7 +8,7 @@ import { splats } from "./schema";
 import SceneItem from "../definitions/SceneItem";
 import VideoItem from "../definitions/VideoItem";
 
-export async function insertNewRowInDB(
+export async function addSplatRecordToDB(
   splatUploadMetaData: SplatUploadMetaData
 ): Promise<number | null> {
   const ids = await db
