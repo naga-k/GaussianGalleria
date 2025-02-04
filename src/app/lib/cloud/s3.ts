@@ -73,7 +73,7 @@ export default class S3Handler {
           Body: fileBlob,
         },
       });
-      return await upload.done().then((output) => {
+      return await upload.done().then(() => {
         const outputUrl = buildS3Url(
           bucketName!,
           process.env.AWS_REGION!,

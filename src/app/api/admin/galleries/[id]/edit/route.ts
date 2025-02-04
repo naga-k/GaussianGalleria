@@ -45,7 +45,7 @@ export async function POST(
       ? (formData.get("thumbnail") as File)
       : undefined;
 
-    let oldThumbnailUrl = galleryDetails.thumbnailUrl;
+    const oldThumbnailUrl = galleryDetails.thumbnailUrl;
     let newThumbnailUrl: string | null = null;
 
     if (thumbnail && thumbnail.size > 0) {
