@@ -45,7 +45,8 @@ export async function POST(
       ? (formData.get("thumbnail") as File)
       : undefined;
 
-    let thumbnailUrl = galleryDetails.thumbnailUrl;
+    const oldThumbnailUrl = galleryDetails.thumbnailUrl;
+    let newThumbnailUrl: string | null = null;
 
     if (thumbnail && thumbnail.size > 0) {
       if (!S3_BUCKET_ENDPOINTS.thumbnail) {
@@ -56,16 +57,16 @@ export async function POST(
       }`;
 
       const s3Handler = new S3Handler();
-      thumbnailUrl = await s3Handler.upload(
+      newThumbnailUrl = await s3Handler.upload(
         filenameWithTimestamp,
         thumbnail,
         S3_BUCKET_ENDPOINTS.thumbnail
       );
     }
-
+    
     const galleryItem: GalleryItem = {
       ...galleryMeta,
-      thumbnailUrl: thumbnailUrl,
+      thumbnailUrl: newThumbnailUrl !== null ? newThumbnailUrl : oldThumbnailUrl,
     };
 
     const editedId: number = await editGallery(
@@ -75,11 +76,12 @@ export async function POST(
     );
 
     if (
-      galleryDetails.thumbnailUrl &&
-      galleryDetails.thumbnailUrl !== thumbnailUrl
+      newThumbnailUrl !== null && 
+      oldThumbnailUrl !== null &&
+      newThumbnailUrl !== oldThumbnailUrl
     ) {
       const s3Handler = new S3Handler();
-      await s3Handler.deleteFileWithUrl(galleryDetails.thumbnailUrl);
+      await s3Handler.deleteFileWithUrl(oldThumbnailUrl);
     }
 
     return NextResponse.json(
@@ -87,8 +89,9 @@ export async function POST(
       { status: 200 }
     );
   } catch (error) {
+    console.error('Error in galleries/[id]/edit:', error);
     return NextResponse.json(
-      { error: `Upload Splat Error: ${error}` },
+      { error: `Edit Galleries Error: ${error}` },
       { status: 500 }
     );
   }

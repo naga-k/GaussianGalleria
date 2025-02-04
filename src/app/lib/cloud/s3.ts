@@ -60,18 +60,27 @@ export default class S3Handler {
     }
   }
 
-  async upload(filename: string, fileBlob: Blob, bucket_endpoint: string) {
+  async upload(filename: string, fileBlob: Blob, bucket_endpoint: string): Promise<string | null> {
     try {
+      const key = `${bucket_endpoint}${filename}`;
+      const bucketName = process.env.AWS_BUCKET_NAME;
+
       const upload = new Upload({
         client: this.client,
         params: {
-          Bucket: process.env.AWS_BUCKET_NAME,
-          Key: `${bucket_endpoint}${filename}`,
+          Bucket: bucketName,
+          Key: key,
           Body: fileBlob,
         },
       });
-      return await upload.done().then((output) => {
-        return output.Location || "";
+      return await upload.done().then(() => {
+        const outputUrl = buildS3Url(
+          bucketName!,
+          process.env.AWS_REGION!,
+          key
+        );
+
+        return outputUrl;
       });
     } catch (error) {
       console.error("Error during upload:", error);
@@ -133,7 +142,7 @@ export default class S3Handler {
       if (!response || !response.Location) {
         throw new Error("Error completing multipart upload");
       }
-      const location = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+      const location = buildS3Url(process.env.AWS_BUCKET_NAME!,process.env.AWS_REGION!, key);
       return location;
     } catch (error) {
       console.error("Error completing multipart upload:", error);
@@ -172,4 +181,8 @@ export default class S3Handler {
       return false;
     }
   }
+}
+
+function buildS3Url(bucketName: string,  awsRegion: string, key: string): string{
+  return `https://${bucketName}.s3.${awsRegion}.amazonaws.com/${key}`;
 }
