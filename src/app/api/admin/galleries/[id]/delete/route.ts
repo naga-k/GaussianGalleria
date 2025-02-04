@@ -41,8 +41,9 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
+    console.error('Error in galleries/[id]/delete:', error);
     return NextResponse.json(
-      { error: `Upload Splat Error: ${error}` },
+      { error: `Delete Gallery Error: ${error}` },
       { status: 500 }
     );
   }

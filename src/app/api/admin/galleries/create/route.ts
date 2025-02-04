@@ -63,8 +63,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: galleryId }, { status: 200 });
   } catch (error) {
+    console.error('Error in galleries/create:', error);
     return NextResponse.json(
-      { error: `Upload Splat Error: ${error}` },
+      { error: `Create Gallery Error: ${error}` },
       { status: 500 }
     );
   }
