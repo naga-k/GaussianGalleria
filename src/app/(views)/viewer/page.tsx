@@ -4,7 +4,6 @@ import React, { useEffect, Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import SplatViewer from "./components/SplatViewer";
-import SceneItem from "../../lib/definitions/SceneItem";
 
 const Viewer: React.FC = () => {
   const router = useRouter();
@@ -21,24 +20,16 @@ interface ViewerContentProps {
 }
 
 const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
-  const [loading, setLoading] = useState(true); // For future use
-  const [sceneItem, setSceneItem] = useState<SceneItem | null>(null);
+  const [sceneItem, setSceneItem] = useState<{
+    id: number;
+    name: string;
+    description: string;
+    splatUrl: string;
+    videoUrl: string;
+  } | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-
-  useEffect(() => {
-    setLoading(true);
-    fetchSceneItem(id)
-      .then((sceneItem: SceneItem) => {
-        setSceneItem(sceneItem);
-      })
-      .catch((error) => {
-        console.error("Error fetching scene items:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [id]);
 
   const fetchSceneItem = async (id: string | null) => {
     if (!id) {
@@ -57,25 +48,23 @@ const ViewerContent: React.FC<ViewerContentProps> = ({ router }) => {
       );
     }
 
-    const item = await response.json();
-
-    // Sign the URL using the API
-    const signedResponse = await fetch('/api/s3-presign', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ urls: [item.splatUrl] })
-    });
-
-    const { signedUrls } = await signedResponse.json();
-    
-    return {
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      splatUrl: signedUrls[0],
-      videoUrl: item.videoUrl
-    };
+    // API returns object with splatUrl/videoUrl (signed URLs)
+    return await response.json();
   };
+
+  useEffect(() => {
+    setLoading(true);
+    fetchSceneItem(id)
+      .then((responseData) => { // Remove SceneItem type here
+        setSceneItem(responseData);
+      })
+      .catch((error) => {
+        console.error("Error fetching scene items:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id]);
 
   const handleClose = () => {
     router.back();

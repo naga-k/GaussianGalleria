@@ -29,9 +29,9 @@ export async function DELETE(
       );
     }
 
-    if (galleryDetails.thumbnailUrl) {
+    if (galleryDetails.thumbnailKey) {
       const s3Handler = new S3Handler();
-      await s3Handler.deleteFileWithUrl(galleryDetails.thumbnailUrl);
+      await s3Handler.deleteFileWithUrl(galleryDetails.thumbnailKey);
     }
 
     await deleteGallery(galleryId);

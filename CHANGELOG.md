@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Database Code refactor 
+- Gallery splat API now returns pre-signed video and splat URLs; gallery thumbnails are pre-signed via the galleries listing endpoint
+- The database will be storing the S3 keys instead of the full path to support dynamic URL signing and easier migration between storage buckets
+
 ## [0.2.1] - 2025-02-04
 
 - ### Fixed

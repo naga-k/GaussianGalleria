@@ -1,15 +1,11 @@
 import AuthHandler from "@/src/app/lib/auth/authHandler";
-import S3Handler from "@/src/app/lib/cloud/s3";
-import {
-  getSplatUrlWithId,
-  getVideoUrlWithId,
-  updateRowWithID,
-} from "@/src/app/lib/db/splatTableUtils";
+import { updateRowWithID } from "@/src/app/lib/db/splatTableUtils";
 import { SplatEditMetaData } from "@/src/app/lib/definitions/SplatPayload";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
+    // Restore auth check
     const authHandler = new AuthHandler();
     if (!(await authHandler.verifyAuth())) {
       return NextResponse.json(
@@ -17,43 +13,30 @@ export async function POST(request: Request) {
         { status: 403 }
       );
     }
+
     const splatEditMetaData: SplatEditMetaData = await request.json();
-
-    let oldSplatUrl: string | null = null;
-    if (splatEditMetaData.splatFileUrl !== null) {
-      oldSplatUrl = await getSplatUrlWithId(splatEditMetaData.id);
+    
+    if (!splatEditMetaData.id) {
+      return NextResponse.json(
+        { error: "Splat ID is required" },
+        { status: 400 }
+      );
     }
 
-    let oldVideoUrl: string | null = null;
-    if (splatEditMetaData.videoFileUrl !== null) {
-      oldVideoUrl = await getVideoUrlWithId(splatEditMetaData.id);
+    const editedId = await updateRowWithID(splatEditMetaData);
+    
+    if (editedId === null) {
+      return NextResponse.json(
+        { error: "Failed to update splat record" },
+        { status: 500 }
+      );
     }
 
-    const splatId = await updateRowWithID(splatEditMetaData);
-
-    const s3Handler = new S3Handler();
-
-    if (oldSplatUrl !== null) {
-      s3Handler.deleteFileWithUrl(oldSplatUrl);
-    }
-
-    if (oldVideoUrl !== null) {
-      s3Handler.deleteFileWithUrl(oldVideoUrl);
-    }
-
-    if (!splatId) {
-      throw new Error("Unable to fetch edited Id");
-    }
-
-    return NextResponse.json(
-      {
-        message: `Splat edited at id: ${splatId}`,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({ id: editedId }, { status: 200 });
   } catch (error) {
+    console.error("Error editing splat:", error);
     return NextResponse.json(
-      { error: `Upload Splat Error: ${error}` },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

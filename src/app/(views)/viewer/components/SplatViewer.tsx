@@ -15,11 +15,16 @@ import { SceneSetup } from "./SceneSetup";
 import * as THREE from "three";
 import { ErrorBoundary } from "react-error-boundary";
 import { InfoPanel } from "./InfoPanel";
-import SceneItem from "../../../lib/definitions/SceneItem";
 
 interface SplatViewerProps {
+  sceneItem: {
+    id: number;
+    name: string;
+    description: string;
+    splatUrl: string;
+    videoUrl: string;
+  } | null;
   onClose: () => void;
-  sceneItem: SceneItem | null;
 }
 
 export default function SplatViewer({ onClose, sceneItem }: SplatViewerProps) {

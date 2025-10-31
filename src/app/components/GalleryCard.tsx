@@ -16,10 +16,10 @@ export default function GalleryCard({ gallery, onClick }: Props) {
                      hover:shadow-xl transition-shadow duration-300
                      transform hover:scale-105 transition-transform"
     >
-      {gallery.thumbnailUrl && (
+      {gallery.thumbnailKey && (
         <div className="w-full h-48 relative">
           <Image
-            src={gallery.thumbnailUrl}
+            src={gallery.thumbnailKey}
             alt={gallery.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

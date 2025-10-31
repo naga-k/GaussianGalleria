@@ -14,42 +14,38 @@ interface CompleteUploadRequest {
 }
 
 export async function POST(request: Request) {
-    try {
-
-        const authHandler = new AuthHandler();
-        if (!(await authHandler.verifyAuth())) {
-            return NextResponse.json(
-                { error: "Endpoint accessed without authenticated session." },
-                { status: 403 }
-            );
-        }
-        const { uploadId, key, parts } = await request.json() as CompleteUploadRequest;
-
-        if (!uploadId || !key || !parts) {
-            return NextResponse.json(
-                { error: "Missing required parameters" },
-                { status: 400 }
-            );
-        }
-
-        const s3Handler = new S3Handler();
-        const result = await s3Handler.completeMultipartUpload(uploadId, key, parts);
-
-
-        if (!result) {
-            return NextResponse.json(
-                { error: "Failed to complete multipart upload" },
-                { status: 500 }
-            );
-        }
-
-        return NextResponse.json({ location: result });
-
-    } catch (error) {
-        console.error("Error completing multipart upload:", error);
-        return NextResponse.json(
-            { error: "Internal server error" },
-            { status: 500 }
-        );
+  try {
+    // Restore auth check
+    const authHandler = new AuthHandler();
+    if (!(await authHandler.verifyAuth())) {
+      return NextResponse.json(
+        { error: "Endpoint accessed without authenticated session." },
+        { status: 403 }
+      );
     }
+
+    const { key, uploadId, parts } = await request.json() as CompleteUploadRequest;
+
+    if (!uploadId || !key || !parts) {
+      return NextResponse.json(
+        { error: "Missing required parameters" },
+        { status: 400 }
+      );
+    }
+    
+    const s3Handler = new S3Handler();
+    const result = await s3Handler.completeMultipartUpload(uploadId, key, parts);
+    
+    if (!result) {
+      return NextResponse.json(
+        { error: "Failed to complete multipart upload" }, 
+        { status: 500 }
+      );
+    }
+    
+    return NextResponse.json({ key: result });
+  } catch (error) {
+    console.error("Error completing multipart upload:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

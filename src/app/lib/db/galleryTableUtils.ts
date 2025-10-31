@@ -9,7 +9,7 @@ export async function fetchGalleries(): Promise<GalleryItem[]> {
       id: galleries.id,
       name: galleries.name,
       description: galleries.description,
-      thumbnailUrl: galleries.thumbnailUrl,
+      thumbnailKey: galleries.thumbnailKey,
     })
     .from(galleries)
     .orderBy(galleries.id);
@@ -25,7 +25,7 @@ export async function fetchGalleryDetails(
       id: galleries.id,
       name: galleries.name,
       description: galleries.description,
-      thumbnailUrl: galleries.thumbnailUrl,
+      thumbnailKey: galleries.thumbnailKey,
     })
     .from(galleries)
     .where(eq(galleries.id, galleryId));
@@ -40,8 +40,8 @@ export async function fetchGallerySplats(
     .select({
       id: splats.id,
       name: splats.name,
-      video: splats.video,
-      splat: splats.splat,
+      videoKey: splats.videoKey,
+      splatKey: splats.splatKey,
     })
     .from(splatsToGalleries)
     .innerJoin(splats, eq(splats.id, splatsToGalleries.splatId))
@@ -54,14 +54,14 @@ export async function createGallery(
   name: string,
   splatIds: number[],
   description?: string,
-  thumbnailUrl?: string
+  thumbnailKey?: string
 ): Promise<number> {
   const ids = await db
     .insert(galleries)
     .values({
       name: name,
       description: description || null,
-      thumbnailUrl: thumbnailUrl || null,
+      thumbnailKey: thumbnailKey || null,
     })
     .returning({ insertedId: galleries.id });
 
@@ -71,17 +71,20 @@ export async function createGallery(
 
   const galleryId = ids[0].insertedId;
 
-  const relationIds = await db
-    .insert(splatsToGalleries)
-    .values(
-      splatIds.map((id) => {
-        return { splatId: id, galleryId: galleryId };
-      })
-    )
-    .returning({ insertedId: splatsToGalleries.id });
+  // Only insert relations if there are splat IDs
+  if (splatIds.length > 0) {
+    const relationIds = await db
+      .insert(splatsToGalleries)
+      .values(
+        splatIds.map((id) => {
+          return { splatId: id, galleryId: galleryId };
+        })
+      )
+      .returning({ insertedId: splatsToGalleries.id });
 
-  if (relationIds.length !== splatIds.length) {
-    throw new Error("Uploaded Splat count does not match Splat Id length.");
+    if (relationIds.length !== splatIds.length) {
+      throw new Error("Uploaded Splat count does not match Splat Id length.");
+    }
   }
 
   return galleryId;
@@ -149,7 +152,8 @@ export async function editGallery(
     .set({
       name: galleryData.name,
       description: galleryData.description,
-      thumbnailUrl: galleryData.thumbnailUrl,
+      // expect thumbnailKey on the galleryData object
+      thumbnailKey: galleryData.thumbnailKey,
       updatedAt: new Date(),
     })
     .where(eq(galleries.id, galleryData.id))

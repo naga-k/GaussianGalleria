@@ -1,6 +1,7 @@
 export default interface VideoItem {
   id: number;
   name: string;
-  src: string;
-  splatUrl: string;
+  // store keys (not signed URLs) in DB layer naming
+  srcKey: string;
+  splatKey: string;
 }

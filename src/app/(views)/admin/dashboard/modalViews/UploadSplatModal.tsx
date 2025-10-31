@@ -22,29 +22,27 @@ export default function UploadSplatModal({ onSuccess }: UploadSplatModalProps) {
 
       const splatFile = splatPayload.get("splatFile") as File;
       if (!splatFile) throw new Error("No Splat File selected");
-      const { success: splatSuccess, location: splatLocationUrl } =
+      const { success: splatSuccess, key: splatKey } =
         await handleMultipartUpload(splatFile, UploadType.SPLAT);
       setUploadProgress(40);
 
       const videoFile = splatPayload.get("videoFile") as File;
       if (!videoFile) throw new Error("No Video File selected");
-      const { success: videoSuccess, location: videoLocationUrl } =
+      const { success: videoSuccess, key: videoKey } =
         await handleMultipartUpload(videoFile, UploadType.VIDEO);
       setUploadProgress(80);
 
       const splatUploadMetaData: SplatUploadMetaData = {
         name: splatPayload.get("name") as string,
         description: splatPayload.get("description") as string,
-        splatFileUrl: splatLocationUrl,
-        videoFileUrl: videoLocationUrl,
+        splatFileUrl: splatKey,
+        videoFileUrl: videoKey,
       };
 
       const response = await fetch("/api/admin/createNewSplatEntry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          splatUploadMetaData,
-        }),
+        body: JSON.stringify(splatUploadMetaData), // Remove the wrapper object
       });
       if (!response.ok) {
         throw new Error(

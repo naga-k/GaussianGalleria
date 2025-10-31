@@ -71,7 +71,7 @@ export async function completeMultipartUpload(
   key: string,
   uploadId: string,
   parts: CompletedPart[]
-): Promise<{ success: boolean; location: string }> {
+): Promise<{ success: boolean; key: string }> {
   try {
     const response = await fetch(
       "/api/admin/uploadSplat/completeMultipartUpload",
@@ -92,7 +92,7 @@ export async function completeMultipartUpload(
     }
 
     const data = await response.json();
-    return { success: response.ok, location: data.location };
+    return { success: response.ok, key: data.key };
   } catch (error) {
     console.error("Error completing multipart upload:", error);
     throw error;
@@ -102,7 +102,7 @@ export async function completeMultipartUpload(
 export async function handleMultipartUpload(
   file: File,
   uploadType: UploadType
-): Promise<{ success: boolean; location: string }> {
+): Promise<{ success: boolean; key: string }> {
   try {
     const numberOfParts = Math.ceil(file.size / DEFAULT_CHUNK_SIZE);
 
@@ -116,12 +116,12 @@ export async function handleMultipartUpload(
       config
     );
     const parts = await uploadParts(file, presignedUrls, DEFAULT_CHUNK_SIZE);
-    const { success, location } = await completeMultipartUpload(
+    const { success, key: uploadedKey } = await completeMultipartUpload(
       key,
       uploadId,
       parts
     );
-    return { success, location };
+    return { success, key: uploadedKey };
   } catch (error) {
     console.error("Error handling multipart upload:", error);
     throw error;

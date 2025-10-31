@@ -45,7 +45,7 @@ export async function POST(
       ? (formData.get("thumbnail") as File)
       : undefined;
 
-    const oldThumbnailUrl = galleryDetails.thumbnailUrl;
+    const oldThumbnailUrl = galleryDetails.thumbnailKey;
     let newThumbnailUrl: string | null = null;
 
     if (thumbnail && thumbnail.size > 0) {
@@ -57,16 +57,18 @@ export async function POST(
       }`;
 
       const s3Handler = new S3Handler();
-      newThumbnailUrl = await s3Handler.upload(
+      const uploadedKey = await s3Handler.upload(
         filenameWithTimestamp,
         thumbnail,
         S3_BUCKET_ENDPOINTS.thumbnail
       );
+      // S3Handler.upload() now returns the key directly
+      newThumbnailUrl = uploadedKey;
     }
     
     const galleryItem: GalleryItem = {
       ...galleryMeta,
-      thumbnailUrl: newThumbnailUrl !== null ? newThumbnailUrl : oldThumbnailUrl,
+      thumbnailKey: newThumbnailUrl !== null ? newThumbnailUrl : oldThumbnailUrl,
     };
 
     const editedId: number = await editGallery(

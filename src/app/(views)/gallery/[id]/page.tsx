@@ -42,9 +42,7 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(
-        `/api/galleries/gallery/${galleryId}/splats`
-      );
+      const response = await fetch(`/api/galleries/gallery/${galleryId}/splats`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -56,28 +54,8 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
         throw new Error("Data is not an array");
       }
 
-      // Extract URLs to sign
-      const urlsToSign = data.map((item) => item.src).filter(Boolean);
-
-      // Sign all URLs in one request
-      const signedResponse = await fetch("/api/s3-presign", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ urls: urlsToSign }),
-      });
-
-      const { signedUrls } = await signedResponse.json();
-
-      // Create URL mapping
-      const urlMap = new Map(urlsToSign.map((url, i) => [url, signedUrls[i]]));
-
-      // Update items with signed URLs
-      const signedSplats = data.map((item) => ({
-        ...item,
-        src: urlMap.get(item.src) || item.src,
-      }));
-
-      setSplats(signedSplats);
+      // Server must return already-signed URLs (src and splatUrl).
+      setSplats(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
@@ -86,7 +64,7 @@ export default function GalleryPage({ params }: { params: { id: string } }) {
   };
 
   const handleVideoClick = (item: VideoItem) => {
-    if (item.splatUrl) {
+    if (item.splatKey) {
       router.push(
         `/viewer?${new URLSearchParams({
           id: item.id.toString(),
