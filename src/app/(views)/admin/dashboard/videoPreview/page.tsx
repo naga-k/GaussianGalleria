@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -7,7 +7,7 @@ import AuthContainer from "../../components/AuthContainer";
 interface VideoData {
   id: number;
   name: string;
-  videoUrl: string;
+  videoUrl: string | null; // server will now return signed URL
 }
 
 function VideoPreview() {
@@ -20,36 +20,22 @@ function VideoPreview() {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        // Fetch video details
+        setLoading(true);
         const response = await fetch(`/api/fetchSceneDetailsWithID?id=${id}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch video details');
+          throw new Error("Failed to fetch video details");
         }
         const data: VideoData = await response.json();
-
-        // Get presigned URL
-        const signResponse = await fetch('/api/s3-presign', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ urls: [data.videoUrl] })
-        });
-
-        if (!signResponse.ok) {
-          throw new Error('Failed to get signed URL');
-        }
-
-        const { signedUrls } = await signResponse.json();
-        setVideoUrl(signedUrls[0]);
+        // Server should return the signed HTTPS URL already.
+        setVideoUrl(data.videoUrl ?? null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) {
-      fetchVideo();
-    }
+    if (id) fetchVideo();
   }, [id]);
 
   return (
@@ -76,7 +62,7 @@ function VideoPreview() {
 
 export default function VideoPreviewPage() {
   const router = useRouter();
-  
+
   return (
     <AuthContainer fallback={() => { router.push("/admin"); }}>
       <VideoPreview />

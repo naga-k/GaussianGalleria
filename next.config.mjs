@@ -2,11 +2,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [{
-      protocol: 'https',
-      hostname: 'diffstudio-assets.s3.us-east-2.amazonaws.com',
-      port: '',
-      pathname: '/**'
+    remotePatterns: [
+    {
+      protocol: "https",
+      hostname: "gaussian-galleria-assets.s3.us-east-2.amazonaws.com",
+      pathname: "/**",
     }],
   },
 }

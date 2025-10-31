@@ -11,12 +11,26 @@ export async function GET() {
     const s3Handler = new S3Handler();
     const galleriesData = await fetchGalleries();
 
-    // Presign all thumbnail URLs
+    // Presign all thumbnail URLs (handles plain S3 keys or full URLs)
     const galleriesWithSignedUrls = await Promise.all(
-      galleriesData.map(async (gallery) => ({
-        ...gallery,
-        thumbnailUrl: gallery.thumbnailUrl ? await s3Handler.getSignedS3Url(gallery.thumbnailUrl) : gallery.thumbnailUrl
-      }))
+      galleriesData.map(async (gallery) => {
+        try {
+          const signedThumbnail = gallery.thumbnailKey
+            ? await s3Handler.getSignedS3Url(gallery.thumbnailKey)
+            : gallery.thumbnailKey;
+
+          return {
+            ...gallery,
+            thumbnailKey: signedThumbnail ?? gallery.thumbnailKey,
+          };
+        } catch (err) {
+          console.error("Error signing thumbnail for gallery", gallery.id, err);
+          return {
+            ...gallery,
+            thumbnailKey: gallery.thumbnailKey,
+          };
+        }
+      })
     );
 
     return NextResponse.json(galleriesWithSignedUrls, {

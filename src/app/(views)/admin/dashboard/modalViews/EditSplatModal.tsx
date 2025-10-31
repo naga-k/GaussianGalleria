@@ -37,7 +37,7 @@ export default function EditSplatModal({
       if (splatFile.size > 0) {
         const result = await handleMultipartUpload(splatFile, UploadType.SPLAT);
         splatSuccess = result.success;
-        splatLocationUrl = result.location;
+        splatLocationUrl = result.key;
       }
       setUploadProgress(40);
 
@@ -47,7 +47,7 @@ export default function EditSplatModal({
       if (videoFile.size > 0) {
         const result = await handleMultipartUpload(videoFile, UploadType.VIDEO);
         videoSuccess = result.success;
-        videoLocationUrl = result.location;
+        videoLocationUrl = result.key;
       }
       setUploadProgress(80);
 

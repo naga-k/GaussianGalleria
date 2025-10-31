@@ -4,8 +4,8 @@ import {pgTable, serial, text, timestamp, integer} from 'drizzle-orm/pg-core';
 export const splats = pgTable('splats', {
     id: serial('id').primaryKey(),
     name: text('name'),
-    splat: text('splat'),
-    video: text('video'),
+    splatKey: text('splat_key'),
+    videoKey: text('video_key'),
     createdAt: timestamp('createdAt').defaultNow(),
     updatedAt: timestamp('updatedAt'),
     description: text('description')
@@ -15,7 +15,7 @@ export const galleries = pgTable('galleries', {
     id: serial('id').primaryKey(),
     name: text('name').notNull(),
     description: text('description'),
-    thumbnailUrl: text('thumbnailUrl'),
+    thumbnailKey: text('thumbnail_key'),
     createdAt: timestamp('createdAt').defaultNow(),
     updatedAt: timestamp('updatedAt')
 });
