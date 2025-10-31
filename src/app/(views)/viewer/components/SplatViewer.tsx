@@ -15,7 +15,6 @@ import { SceneSetup } from "./SceneSetup";
 import * as THREE from "three";
 import { ErrorBoundary } from "react-error-boundary";
 import { InfoPanel } from "./InfoPanel";
-import SceneItem from "../../../lib/definitions/SceneItem";
 
 interface SplatViewerProps {
   sceneItem: {

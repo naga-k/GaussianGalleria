@@ -8,6 +8,8 @@ import { splats } from "./schema";
 import SceneItem from "../definitions/SceneItem";
 import VideoItem from "../definitions/VideoItem";
 
+type SplatUpdateInput = Partial<typeof splats.$inferInsert>;
+
 export async function addSplatRecordToDB(
   splatUploadMetaData: SplatUploadMetaData
 ): Promise<number | null> {
@@ -80,25 +82,19 @@ export async function updateRowWithID(
   splatEditMetaData: SplatEditMetaData
 ): Promise<number | null> {
   try {
-    let editSplatQueryParams: any = {
+    const editSplatQueryParams: SplatUpdateInput = {
       name: splatEditMetaData.name,
       description: splatEditMetaData.description,
     };
 
     if (splatEditMetaData.splatFileUrl) {
-      editSplatQueryParams = Object.assign(editSplatQueryParams, {
-        splatKey: splatEditMetaData.splatFileUrl,
-      });
+      editSplatQueryParams.splatKey = splatEditMetaData.splatFileUrl;
     }
     if (splatEditMetaData.videoFileUrl) {
-      editSplatQueryParams = Object.assign(editSplatQueryParams, {
-        videoKey: splatEditMetaData.videoFileUrl,
-      });
+      editSplatQueryParams.videoKey = splatEditMetaData.videoFileUrl;
     }
 
-    editSplatQueryParams = Object.assign(editSplatQueryParams, {
-      updatedAt: new Date(),
-    });
+    editSplatQueryParams.updatedAt = new Date();
 
     const result = await db
       .update(splats)

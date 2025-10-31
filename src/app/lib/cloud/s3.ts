@@ -179,7 +179,3 @@ export default class S3Handler {
     }
   }
 }
-
-function buildS3Url(bucketName: string,  awsRegion: string, key: string): string{
-  return `https://${bucketName}.s3.${awsRegion}.amazonaws.com/${key}`;
-}
