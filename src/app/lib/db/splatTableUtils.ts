@@ -16,8 +16,9 @@ export async function addSplatRecordToDB(
     .values({
       name: splatUploadMetaData.name,
       description: splatUploadMetaData.description,
-      splat: splatUploadMetaData.splatFileUrl,
-      video: splatUploadMetaData.videoFileUrl,
+      // store keys in DB columns 'splat' and 'video' via schema mapping
+      splatKey: splatUploadMetaData.splatFileUrl,
+      videoKey: splatUploadMetaData.videoFileUrl,
     })
     .returning({ insertedId: splats.id });
 
@@ -32,8 +33,8 @@ export async function fetchVideoItems(): Promise<VideoItem[]> {
     .select({
       id: splats.id,
       name: splats.name,
-      video: splats.video,
-      splat: splats.splat,
+      videoKey: splats.videoKey,
+      splatKey: splats.splatKey,
     })
     .from(splats)
     .orderBy(splats.id)
@@ -42,8 +43,8 @@ export async function fetchVideoItems(): Promise<VideoItem[]> {
         .map((item) => ({
           id: item.id,
           name: item.name || "",
-          src: item.video || "",
-          splatUrl: item.splat || "",
+          srcKey: item.videoKey || "",
+          splatKey: item.splatKey || "",
         }))
         .sort((a, b) => a.id - b.id);
     });
@@ -57,8 +58,8 @@ export async function getSceneItemById(id: number): Promise<SceneItem | null> {
       id: splats.id,
       name: splats.name,
       description: splats.description,
-      splatUrl: splats.splat,
-      videoUrl: splats.video,
+      splatKey: splats.splatKey,
+      videoKey: splats.videoKey,
     })
     .from(splats)
     .where(eq(splats.id, id))
@@ -67,8 +68,8 @@ export async function getSceneItemById(id: number): Promise<SceneItem | null> {
         id: item.id,
         name: item.name || "",
         description: item.description || "",
-        splatUrl: item.splatUrl || "",
-        videoUrl: item.videoUrl || "",
+        splatKey: item.splatKey || "",
+        videoKey: item.videoKey || "",
       }));
     });
 
@@ -79,19 +80,19 @@ export async function updateRowWithID(
   splatEditMetaData: SplatEditMetaData
 ): Promise<number | null> {
   try {
-    let editSplatQueryParams = {
+    let editSplatQueryParams: any = {
       name: splatEditMetaData.name,
       description: splatEditMetaData.description,
     };
 
     if (splatEditMetaData.splatFileUrl) {
       editSplatQueryParams = Object.assign(editSplatQueryParams, {
-        splat: splatEditMetaData.splatFileUrl,
+        splatKey: splatEditMetaData.splatFileUrl,
       });
     }
     if (splatEditMetaData.videoFileUrl) {
       editSplatQueryParams = Object.assign(editSplatQueryParams, {
-        video: splatEditMetaData.videoFileUrl,
+        videoKey: splatEditMetaData.videoFileUrl,
       });
     }
 
@@ -125,22 +126,32 @@ export async function deleteRowWithID(id: number): Promise<number | null> {
     });
 }
 
-export async function getSplatUrlWithId(id: number): Promise<string | null> {
+// New: get key helpers
+export async function getSplatKeyWithId(id: number): Promise<string | null> {
   const result = await db
-    .select({ splatUrl: splats.splat })
+    .select({ splatKey: splats.splatKey })
     .from(splats)
     .where(eq(splats.id, id))
     .then((data) => data);
 
-  return result.length === 1 ? result[0].splatUrl : null;
+  return result.length === 1 ? result[0].splatKey : null;
+}
+
+export async function getVideoKeyWithId(id: number): Promise<string | null> {
+  const result = await db
+    .select({ videoKey: splats.videoKey })
+    .from(splats)
+    .where(eq(splats.id, id))
+    .then((data) => data);
+
+  return result.length === 1 ? result[0].videoKey : null;
+}
+
+// Keep compatibility wrappers (deprecated names)
+export async function getSplatUrlWithId(id: number): Promise<string | null> {
+  return getSplatKeyWithId(id);
 }
 
 export async function getVideoUrlWithId(id: number): Promise<string | null> {
-  const result = await db
-    .select({ videoUrl: splats.video })
-    .from(splats)
-    .where(eq(splats.id, id))
-    .then((data) => data);
-
-  return result.length === 1 ? result[0].videoUrl : null;
+  return getVideoKeyWithId(id);
 }

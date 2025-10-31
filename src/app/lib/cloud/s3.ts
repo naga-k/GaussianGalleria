@@ -73,14 +73,10 @@ export default class S3Handler {
           Body: fileBlob,
         },
       });
+      
       return await upload.done().then(() => {
-        const outputUrl = buildS3Url(
-          bucketName!,
-          process.env.AWS_REGION!,
-          key
-        );
-
-        return outputUrl;
+        // Return the key instead of the full URL
+        return key;
       });
     } catch (error) {
       console.error("Error during upload:", error);
@@ -139,11 +135,12 @@ export default class S3Handler {
       });
 
       const response = await this.client.send(command);
-      if (!response || !response.Location) {
+      if (!response) {
         throw new Error("Error completing multipart upload");
       }
-      const location = buildS3Url(process.env.AWS_BUCKET_NAME!,process.env.AWS_REGION!, key);
-      return location;
+      
+      // Return the key instead of full URL
+      return key;
     } catch (error) {
       console.error("Error completing multipart upload:", error);
       return null;

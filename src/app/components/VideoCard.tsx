@@ -47,7 +47,7 @@ export default function VideoCard({ item, onClick }: VideoItemProps) {
     e.preventDefault();
     e.stopPropagation();
     
-    if (item.splatUrl) {
+    if (item.splatKey) {
       onClick(item);
     }
   };
@@ -68,7 +68,7 @@ export default function VideoCard({ item, onClick }: VideoItemProps) {
           isLoaded ? 'block' : 'hidden'
         }`}
         onLoadedData={handleVideoLoad}
-        src={item.src}
+        src={item.srcKey}
         playsInline
         muted
         loop

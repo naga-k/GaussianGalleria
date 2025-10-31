@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Database Code refactor 
+- video, splat and uploaded and thumbnail data will be fetched from S3 in a single api call
+- The database will be storing the s3 keys instead of the full path to support
 
 ## [0.2.1] - 2025-02-04
 

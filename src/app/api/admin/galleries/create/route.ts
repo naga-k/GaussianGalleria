@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         };
       });
 
-    let thumbnailUrl: string | null = null;
+    let thumbnailKey: string | null = null;
 
     if (payload.thumbnail) {
       if (!S3_BUCKET_ENDPOINTS.thumbnail) {
@@ -47,23 +47,25 @@ export async function POST(request: Request) {
       }`;
 
       const s3Handler = new S3Handler();
-      thumbnailUrl = await s3Handler.upload(
+      const uploadedKey = await s3Handler.upload(
         filenameWithTimestamp,
         payload.thumbnail,
         S3_BUCKET_ENDPOINTS.thumbnail
       );
+
+      thumbnailKey = uploadedKey;
     }
 
     const galleryId: number = await createGallery(
       payload.name,
       payload.splatIds,
       payload.description,
-      thumbnailUrl || undefined
+      thumbnailKey || undefined
     );
 
     return NextResponse.json({ message: galleryId }, { status: 200 });
   } catch (error) {
-    console.error('Error in galleries/create:', error);
+    console.error("Error in galleries/create:", error);
     return NextResponse.json(
       { error: `Create Gallery Error: ${error}` },
       { status: 500 }
