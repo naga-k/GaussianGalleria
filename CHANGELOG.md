@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Database Code refactor 
-- video, splat and uploaded and thumbnail data will be fetched from S3 in a single api call
-- The database will be storing the s3 keys instead of the full path to support
+- Gallery splat API now returns pre-signed video and splat URLs; gallery thumbnails are pre-signed via the galleries listing endpoint
+- The database will be storing the S3 keys instead of the full path to support dynamic URL signing and easier migration between storage buckets
 
 ## [0.2.1] - 2025-02-04
 
