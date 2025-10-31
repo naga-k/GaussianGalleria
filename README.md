@@ -82,6 +82,7 @@ npx drizzle-kit migrate
 ### Asset Storage
 - Currently configured for S3 URLs
 - Viewer supports any public URL (upcoming feature)
+- The database will be storing the S3 keys instead of the full path to support dynamic URL signing and easier migration between storage buckets
 
 #### S3 Multipart Upload CORS
 Multipart uploads rely on reading the ETag from each presigned `PUT` response. Update your bucket CORS rule to expose that header:
