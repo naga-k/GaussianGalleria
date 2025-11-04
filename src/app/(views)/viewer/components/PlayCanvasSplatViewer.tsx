@@ -6,7 +6,7 @@ import { Camera, GSplat } from "@playcanvas/react/components";
 import { useApp, useSplat } from "@playcanvas/react/hooks";
 import { OrbitControls } from "@playcanvas/react/scripts";
 import { Mouse, TouchDevice, Vec3 } from "playcanvas";
-import type { Entity as PcEntity } from "playcanvas";
+import type { Entity as PcEntity, ScriptComponent } from "playcanvas";
 
 interface PlayCanvasSplatViewerProps {
   src: string;
@@ -52,7 +52,7 @@ function PlayCanvasScene({
 }: PlayCanvasSceneProps) {
   const app = useApp();
   const [cameraEntity, setCameraEntity] = useState<PcEntity | null>(null);
-  const orbitCameraRef = useRef<any>(null);
+  const orbitCameraRef = useRef<OrbitCameraScript | null>(null);
 
   useEffect(() => {
     if (!app) {
@@ -78,9 +78,9 @@ function PlayCanvasScene({
       return;
     }
 
-    const scriptComponent = cameraEntity.script as any;
+    const scriptComponent = cameraEntity.script as ScriptComponentWithOrbit;
 
-    const registerOrbitCamera = (scriptInstance: any) => {
+    const registerOrbitCamera = (scriptInstance: OrbitCameraScript) => {
       orbitCameraRef.current = scriptInstance;
 
       if (!onResetReady) {
@@ -158,3 +158,11 @@ function SupersplatEntity({ src }: SupersplatEntityProps) {
     </EntityComponent>
   );
 }
+
+type OrbitCameraScript = {
+  resetAndLookAtPoint(resetPosition: Vec3, lookAtPoint: Vec3): void;
+};
+
+type ScriptComponentWithOrbit = ScriptComponent & {
+  orbitCamera?: OrbitCameraScript;
+};
