@@ -9,6 +9,7 @@ Demo: [Hosted on Vercel](https://3-d-portfolio-tau-three.vercel.app)
 This Gallery website features:
 - Grid-based pages displaying 3D scenes
 - Interactive viewer for each scene using Splat technology
+- Automatic PlayCanvas-based supersplat viewer for `.compressed.ply` assets with orbit/reset controls
 - Integration with NeonDB for data storage
 - S3 storage for 3D assets
 
@@ -78,6 +79,7 @@ npx drizzle-kit migrate
 ### Viewer Technology
 - Primary viewer: [antimatter15's Splat Viewer](https://antimatter15.com/splat/)
 - Wrapper: [drei-vanilla](https://github.com/pmndrs/drei-vanilla)
+- Supersplat renderer: [PlayCanvas](https://playcanvas.com) with [`@playcanvas/react`](https://github.com/playcanvas/react) for `.compressed.ply` scenes, orbit controls, and reset hooks
 
 ### Asset Storage
 - Currently configured for S3 URLs
