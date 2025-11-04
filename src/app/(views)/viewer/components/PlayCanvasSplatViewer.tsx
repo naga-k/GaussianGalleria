@@ -53,14 +53,17 @@ function PlayCanvasScene({
   const app = useApp();
   const [cameraEntity, setCameraEntity] = useState<PcEntity | null>(null);
   const orbitCameraRef = useRef<OrbitCameraScript | null>(null);
+  const [inputsReady, setInputsReady] = useState(false);
 
   useEffect(() => {
     if (!app) {
+      setInputsReady(false);
       return;
     }
 
     const canvas = app.graphicsDevice?.canvas;
     if (!canvas) {
+      setInputsReady(false);
       return;
     }
 
@@ -71,6 +74,8 @@ function PlayCanvasScene({
     if (!app.touch) {
       app.touch = new TouchDevice(canvas);
     }
+
+    setInputsReady(Boolean(app.mouse && app.touch));
   }, [app]);
 
   useEffect(() => {
@@ -112,6 +117,10 @@ function PlayCanvasScene({
       onResetReady?.(null);
     };
   }, [cameraEntity, defaultFocus, defaultPosition, onResetReady]);
+
+  if (!inputsReady) {
+    return null;
+  }
 
   return (
     <>
