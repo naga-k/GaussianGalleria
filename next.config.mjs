@@ -5,7 +5,7 @@ const nextConfig = {
     remotePatterns: [
     {
       protocol: "https",
-      hostname: "gaussian-galleria-assets.s3.us-east-2.amazonaws.com",
+      hostname: `${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com`,
       pathname: "/**",
     }],
   },
